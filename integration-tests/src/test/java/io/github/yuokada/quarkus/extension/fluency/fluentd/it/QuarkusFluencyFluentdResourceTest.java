@@ -1,6 +1,7 @@
 package io.github.yuokada.quarkus.extension.fluency.fluentd.it;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 
 import org.junit.jupiter.api.Test;
@@ -37,5 +38,33 @@ public class QuarkusFluencyFluentdResourceTest {
                 .then()
                 .extract().statusCode();
         assert status == 200 || status == 503;
+    }
+
+    @Test
+    public void testValidatedEmitWithValidInput() {
+        // No real Fluentd — 200 or 503 acceptable, but no 400
+        int status = given()
+                .when().post("/quarkus-fluency-fluentd/validated-emit?tag=myapp.events&message=hello")
+                .then()
+                .extract().statusCode();
+        assert status == 200 || status == 503;
+    }
+
+    @Test
+    public void testValidatedEmitWithNullTagReturnsBadRequest() {
+        given()
+                .when().post("/quarkus-fluency-fluentd/validated-emit?message=hello")
+                .then()
+                .statusCode(400)
+                .body(containsString("tag must not be null or blank"));
+    }
+
+    @Test
+    public void testValidatedEmitWithInvalidTagFormatReturnsBadRequest() {
+        given()
+                .when().post("/quarkus-fluency-fluentd/validated-emit?tag=.invalid&message=hello")
+                .then()
+                .statusCode(400)
+                .body(containsString("invalid tag format"));
     }
 }

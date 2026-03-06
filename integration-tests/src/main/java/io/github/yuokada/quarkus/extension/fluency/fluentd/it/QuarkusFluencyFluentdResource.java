@@ -28,6 +28,7 @@ import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
 
 import io.github.yuokada.quarkus.extension.fluency.fluentd.runtime.FluencyClient;
+import io.github.yuokada.quarkus.extension.fluency.fluentd.runtime.ValidatingFluencyClient;
 
 @Path("/quarkus-fluency-fluentd")
 @ApplicationScoped
@@ -35,6 +36,9 @@ public class QuarkusFluencyFluentdResource {
 
     @Inject
     FluencyClient fluencyClient;
+
+    @Inject
+    ValidatingFluencyClient validatingFluencyClient;
 
     @GET
     public String hello() {
@@ -58,6 +62,36 @@ public class QuarkusFluencyFluentdResource {
         } else {
             return Response.status(Response.Status.SERVICE_UNAVAILABLE)
                     .entity("Fluentd not available")
+                    .build();
+        }
+    }
+
+    /**
+     * Like /emit but delegates to {@link ValidatingFluencyClient}.
+     * Returns 400 for invalid tag or missing message instead of silently failing.
+     */
+    @POST
+    @Path("/validated-emit")
+    public Response validatedEmit(@QueryParam("tag") String tag, @QueryParam("message") String message) {
+        String resolvedTag = tag != null ? tag : "";
+        String resolvedMessage = message != null ? message : "test";
+
+        Map<String, Object> data = new LinkedHashMap<>();
+        data.put("message", resolvedMessage);
+        data.put("source", "quarkus-fluency-fluentd");
+
+        try {
+            boolean accepted = validatingFluencyClient.emit(resolvedTag, data);
+            if (accepted) {
+                return Response.ok("Emitted to tag: " + resolvedTag).build();
+            } else {
+                return Response.status(Response.Status.SERVICE_UNAVAILABLE)
+                        .entity("Fluentd not available")
+                        .build();
+            }
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(e.getMessage())
                     .build();
         }
     }

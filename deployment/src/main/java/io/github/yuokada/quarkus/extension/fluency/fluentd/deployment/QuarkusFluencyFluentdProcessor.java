@@ -1,6 +1,7 @@
 package io.github.yuokada.quarkus.extension.fluency.fluentd.deployment;
 
 import io.github.yuokada.quarkus.extension.fluency.fluentd.runtime.FluencyClient;
+import io.github.yuokada.quarkus.extension.fluency.fluentd.runtime.ValidatingFluencyClient;
 import io.quarkus.arc.deployment.AdditionalBeanBuildItem;
 import io.quarkus.deployment.annotations.BuildProducer;
 import io.quarkus.deployment.annotations.BuildStep;
@@ -17,8 +18,12 @@ class QuarkusFluencyFluentdProcessor {
     }
 
     @BuildStep
-    AdditionalBeanBuildItem registerFluencyClient() {
-        return AdditionalBeanBuildItem.unremovableOf(FluencyClient.class);
+    AdditionalBeanBuildItem registerBeans() {
+        return AdditionalBeanBuildItem.builder()
+                .addBeanClass(FluencyClient.class)
+                .addBeanClass(ValidatingFluencyClient.class)
+                .setUnremovable()
+                .build();
     }
 
     @BuildStep
