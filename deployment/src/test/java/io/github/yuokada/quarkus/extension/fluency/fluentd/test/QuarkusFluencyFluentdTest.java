@@ -58,9 +58,9 @@ public class QuarkusFluencyFluentdTest {
     }
 
     @Test
-    public void testValidTagAndDataReturnsFalseWhenNotConnected() {
-        // Fluentd is not running in unit tests, so emit returns false but does not throw
-        boolean result = validatingClient.emit("myapp.events.user", Map.of("userId", "123"));
-        Assertions.assertFalse(result);
+    public void testValidTagAndDataDoesNotThrow() {
+        // Valid arguments must not raise a validation exception regardless of Fluentd availability
+        Assertions.assertDoesNotThrow(
+                () -> validatingClient.emit("myapp.events.user", Map.of("userId", "123")));
     }
 }
