@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [ "master", "main" ]
+  pull_request:
+    branches: [ "master", "main" ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build & Test (Java ${{ matrix.java }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        java: [ "17", "21" ]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java ${{ matrix.java }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: temurin
+          cache: maven
+
+      - name: Build and unit test
+        run: ./mvnw -B install -pl deployment,runtime
+
+      - name: Integration test (JVM mode)
+        run: ./mvnw -B verify -pl integration-tests -DskipITs=false
+
+  # native:
+  #   name: Native image test
+  #   runs-on: ubuntu-latest
+  #   if: github.event_name == 'push'
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Set up GraalVM
+  #       uses: graalvm/setup-graalvm@v1
+  #       with:
+  #         java-version: "21"
+  #         distribution: graalvm
+  #         cache: maven
+  #     - name: Build extension
+  #       run: ./mvnw -B install -pl deployment,runtime -DskipTests
+  #     - name: Native integration test
+  #       run: ./mvnw -B verify -pl integration-tests -Pnative-image
