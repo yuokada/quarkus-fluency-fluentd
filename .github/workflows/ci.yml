@@ -47,7 +47,6 @@ jobs:
           java-version: "21"
           distribution: graalvm-community
           cache: maven
-      - name: Build extension
-        run: ./mvnw -B install -pl .,deployment,runtime -DskipTests
-      - name: Native integration test
-        run: ./mvnw -B verify -pl integration-tests -Pnative-image
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and native test
+        run: ./mvnw -B verify -Pnative-image -Dsurefire.skip=true
