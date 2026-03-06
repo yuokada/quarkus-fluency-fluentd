@@ -17,6 +17,11 @@
         </dependency>
         <dependency>
             <groupId>org.komamitsu</groupId>
+            <artifactId>fluency-core</artifactId>
+            <version>${fluency.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.komamitsu</groupId>
             <artifactId>fluency-fluentd</artifactId>
             <version>${fluency.version}</version>
         </dependency>
