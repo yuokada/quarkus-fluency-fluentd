@@ -45,9 +45,9 @@ jobs:
         uses: graalvm/setup-graalvm@v1
         with:
           java-version: "21"
-          distribution: graalvm
+          distribution: graalvm-community
           cache: maven
       - name: Build extension
-        run: ./mvnw -B install -pl deployment,runtime -DskipTests
+        run: ./mvnw -B install -pl .,deployment,runtime -DskipTests
       - name: Native integration test
         run: ./mvnw -B verify -pl integration-tests -Pnative-image

@@ -90,6 +90,7 @@
             </build>
             <properties>
                 <skipITs>false</skipITs>
+                <native.surefire.skip>true</native.surefire.skip>
                 <quarkus.native.enabled>true</quarkus.native.enabled>
             </properties>
         </profile>
