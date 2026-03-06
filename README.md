@@ -53,7 +53,7 @@ All properties are under the `quarkus.fluency` prefix.
 | `quarkus.fluency.port` | `24224` | Fluentd TCP port |
 | `quarkus.fluency.enabled` | `true` | Set to `false` to disable log forwarding entirely |
 | `quarkus.fluency.sender-max-retry-count` | `4` | Max send retry attempts |
-| `quarkus.fluency.buffer-chunk-initial-size` | `4194304` | Buffer chunk size in bytes (4 MiB) |
+| `quarkus.fluency.buffer-chunk-initial-size` | `1048576` | Buffer chunk initial size in bytes (1 MiB); must be less than retention size |
 | `quarkus.fluency.buffer-chunk-retention-time-millis` | `1000` | Buffer flush interval in milliseconds |
 
 Example `application.properties`:

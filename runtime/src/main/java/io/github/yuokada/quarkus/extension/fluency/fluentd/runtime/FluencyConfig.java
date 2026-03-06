@@ -25,8 +25,8 @@ public interface FluencyConfig {
     @WithDefault("4")
     int senderMaxRetryCount();
 
-    /** Buffer chunk initial size (bytes). */
-    @WithDefault("4194304")
+    /** Buffer chunk initial size (bytes). Default is 1 MiB; must be less than retention size (4 MiB). */
+    @WithDefault("1048576")
     int bufferChunkInitialSize();
 
     /** Buffer chunk retention time (ms). */
