@@ -35,19 +35,19 @@ jobs:
       - name: Integration test (JVM mode)
         run: ./mvnw -B verify -pl integration-tests -DskipITs=false
 
-  # native:
-  #   name: Native image test
-  #   runs-on: ubuntu-latest
-  #   if: github.event_name == 'push'
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - name: Set up GraalVM
-  #       uses: graalvm/setup-graalvm@v1
-  #       with:
-  #         java-version: "21"
-  #         distribution: graalvm
-  #         cache: maven
-  #     - name: Build extension
-  #       run: ./mvnw -B install -pl deployment,runtime -DskipTests
-  #     - name: Native integration test
-  #       run: ./mvnw -B verify -pl integration-tests -Pnative-image
+  native:
+    name: Native image test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up GraalVM
+        uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: "21"
+          distribution: graalvm
+          cache: maven
+      - name: Build extension
+        run: ./mvnw -B install -pl deployment,runtime -DskipTests
+      - name: Native integration test
+        run: ./mvnw -B verify -pl integration-tests -Pnative-image
