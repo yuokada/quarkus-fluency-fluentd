@@ -1,0 +1,33 @@
+package io.github.yuokada.quarkus.extension.fluency.fluentd.deployment;
+
+import io.github.yuokada.quarkus.extension.fluency.fluentd.runtime.FluencyClient;
+import io.quarkus.arc.deployment.AdditionalBeanBuildItem;
+import io.quarkus.deployment.annotations.BuildProducer;
+import io.quarkus.deployment.annotations.BuildStep;
+import io.quarkus.deployment.builditem.FeatureBuildItem;
+import io.quarkus.deployment.builditem.nativeimage.ReflectiveClassBuildItem;
+
+class QuarkusFluencyFluentdProcessor {
+
+    private static final String FEATURE = "quarkus-fluency-fluentd";
+
+    @BuildStep
+    FeatureBuildItem feature() {
+        return new FeatureBuildItem(FEATURE);
+    }
+
+    @BuildStep
+    AdditionalBeanBuildItem registerFluencyClient() {
+        return AdditionalBeanBuildItem.unremovableOf(FluencyClient.class);
+    }
+
+    @BuildStep
+    void registerForReflection(BuildProducer<ReflectiveClassBuildItem> reflectiveClass) {
+        // Fluency uses reflection for MessagePack serialization in native image
+        reflectiveClass.produce(ReflectiveClassBuildItem.serializationClass(
+                "org.komamitsu.fluency.fluentd.FluencyBuilderForFluentd",
+                "org.komamitsu.fluency.Fluency",
+                "org.komamitsu.fluency.recordformat.FluentdRecordFormatter"
+        ));
+    }
+}
