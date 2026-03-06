@@ -30,7 +30,7 @@ jobs:
           cache: maven
 
       - name: Build and unit test
-        run: ./mvnw -B install -pl deployment,runtime
+        run: ./mvnw -B install -pl .,deployment,runtime
 
       - name: Integration test (JVM mode)
         run: ./mvnw -B verify -pl integration-tests -DskipITs=false
