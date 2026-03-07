@@ -11,29 +11,29 @@ import io.github.yuokada.quarkus.extension.fluency.fluentd.runtime.ValidatingFlu
 
 class QuarkusFluencyFluentdProcessor {
 
-  private static final String FEATURE = "quarkus-fluency-fluentd";
+    private static final String FEATURE = "quarkus-fluency-fluentd";
 
-  @BuildStep
-  FeatureBuildItem feature() {
-    return new FeatureBuildItem(FEATURE);
-  }
+    @BuildStep
+    FeatureBuildItem feature() {
+        return new FeatureBuildItem(FEATURE);
+    }
 
-  @BuildStep
-  AdditionalBeanBuildItem registerBeans() {
-    return AdditionalBeanBuildItem.builder()
-        .addBeanClass(FluencyClient.class)
-        .addBeanClass(ValidatingFluencyClient.class)
-        .setUnremovable()
-        .build();
-  }
+    @BuildStep
+    AdditionalBeanBuildItem registerBeans() {
+        return AdditionalBeanBuildItem.builder()
+                .addBeanClass(FluencyClient.class)
+                .addBeanClass(ValidatingFluencyClient.class)
+                .setUnremovable()
+                .build();
+    }
 
-  @BuildStep
-  void registerForReflection(BuildProducer<ReflectiveClassBuildItem> reflectiveClass) {
-    // Fluency uses reflection for MessagePack serialization in native image
-    reflectiveClass.produce(
-        ReflectiveClassBuildItem.serializationClass(
-            "org.komamitsu.fluency.fluentd.FluencyBuilderForFluentd",
-            "org.komamitsu.fluency.Fluency",
-            "org.komamitsu.fluency.recordformat.FluentdRecordFormatter"));
-  }
+    @BuildStep
+    void registerForReflection(BuildProducer<ReflectiveClassBuildItem> reflectiveClass) {
+        // Fluency uses reflection for MessagePack serialization in native image
+        reflectiveClass.produce(
+                ReflectiveClassBuildItem.serializationClass(
+                        "org.komamitsu.fluency.fluentd.FluencyBuilderForFluentd",
+                        "org.komamitsu.fluency.Fluency",
+                        "org.komamitsu.fluency.recordformat.FluentdRecordFormatter"));
+    }
 }
