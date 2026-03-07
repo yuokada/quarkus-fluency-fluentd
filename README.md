@@ -100,6 +100,20 @@ quarkus.fluency.sender-max-retry-count=8
 ./mvnw install -DskipTests
 ```
 
+## Code Style
+
+This project uses [spotless-maven-plugin](https://github.com/diffplug/spotless/blob/main/plugin-maven/README.md) with [google-java-format](https://github.com/google/google-java-format) to enforce consistent Java formatting.
+
+```bash
+# Check formatting (runs automatically during verify)
+./mvnw spotless:check
+
+# Apply formatting
+./mvnw spotless:apply
+```
+
+The `spotless:check` goal is bound to the `verify` phase, so CI will fail on unformatted code. Run `spotless:apply` before committing.
+
 ## Project Structure
 
 ```
