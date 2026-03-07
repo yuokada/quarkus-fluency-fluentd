@@ -1,8 +1,0 @@
-io/github/yuokada/quarkus/extension/fluency/fluentd/runtime/FluencyClient.class
-io/github/yuokada/quarkus/extension/fluency/fluentd/runtime/FluencyConfig.class
-io/github/yuokada/quarkus/extension/fluency/fluentd/runtime/ValidatingFluencyClient.class
-META-INF/quarkus-config-doc/quarkus-config-model.json
-META-INF/quarkus-config-doc/quarkus-config-model-version
-META-INF/quarkus-config-doc/quarkus-config-javadoc.json
-META-INF/quarkus-javadoc.properties
-META-INF/quarkus-config-roots.list

@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: io.github.yuokada.quarkus.extension.fluency.fluentd.test.QuarkusFluencyFluentdDevModeTest
--------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.776 s -- in io.github.yuokada.quarkus.extension.fluency.fluentd.test.QuarkusFluencyFluentdDevModeTest
