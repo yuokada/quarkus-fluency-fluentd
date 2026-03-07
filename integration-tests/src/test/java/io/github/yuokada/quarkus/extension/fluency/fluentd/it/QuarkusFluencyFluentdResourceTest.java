@@ -1,5 +1,6 @@
 package io.github.yuokada.quarkus.extension.fluency.fluentd.it;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
@@ -26,7 +27,8 @@ public class QuarkusFluencyFluentdResourceTest {
         // No real Fluentd in tests — expect 200 (connected) or 503 (disconnected), not a 5xx crash
         int status =
                 given().when().get("/quarkus-fluency-fluentd/status").then().extract().statusCode();
-        assert status == 200 || status == 503;
+        Assertions.assertTrue(status == 200 || status == 503,
+                "Expected 200 or 503 but got: " + status);
     }
 
     @Test
@@ -38,7 +40,8 @@ public class QuarkusFluencyFluentdResourceTest {
                         .then()
                         .extract()
                         .statusCode();
-        assert status == 200 || status == 503;
+        Assertions.assertTrue(status == 200 || status == 503,
+                "Expected 200 or 503 but got: " + status);
     }
 
     @Test
@@ -51,7 +54,8 @@ public class QuarkusFluencyFluentdResourceTest {
                         .then()
                         .extract()
                         .statusCode();
-        assert status == 200 || status == 503;
+        Assertions.assertTrue(status == 200 || status == 503,
+                "Expected 200 or 503 but got: " + status);
     }
 
     @Test
