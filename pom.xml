@@ -115,6 +115,8 @@
                           </excludes>
                           <googleJavaFormat>
                             <version>${google-java-format.version}</version>
+                            <style>AOSP</style>
+                            <formatJavadoc>false</formatJavadoc>
                           </googleJavaFormat>
                           <importOrder>
                             <order>java|jakarta|org.eclipse,com|org|picocli|io,,io.github.yuokada,\#</order>
