@@ -26,15 +26,15 @@ public interface FluencyConfig {
     int senderMaxRetryCount();
 
     /**
-     * Buffer chunk initial size (bytes). Default is 1 MiB. Must be positive and less than {@link
-     * #bufferChunkRetentionSize()}.
+     * Buffer chunk initial size (bytes). Default is 1 MiB; must be less than
+     * {@code quarkus.fluency.buffer-chunk-retention-size}.
      */
     @WithDefault("1048576")
     int bufferChunkInitialSize();
 
     /**
-     * Buffer chunk retention size (bytes). Default is 4 MiB. Must be greater than {@link
-     * #bufferChunkInitialSize()}.
+     * Buffer chunk retention size (bytes). Default is 4 MiB; must be greater than
+     * {@code quarkus.fluency.buffer-chunk-initial-size}.
      */
     @WithDefault("4194304")
     int bufferChunkRetentionSize();
