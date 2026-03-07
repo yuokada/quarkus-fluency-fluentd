@@ -6,6 +6,8 @@
 
 A Quarkus extension that integrates [Fluency](https://github.com/komamitsu/fluency) — a high-performance [Fluentd](https://www.fluentd.org/) / [Fluent Bit](https://fluentbit.io/) client for Java — into your Quarkus application as a managed CDI bean.
 
+> This extension addresses the direct Fluentd integration request raised in [quarkusio/quarkus#453](https://github.com/quarkusio/quarkus/issues/453).
+
 ## Prerequisites
 
 - Java 17+
