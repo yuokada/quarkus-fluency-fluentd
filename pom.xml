@@ -6,6 +6,24 @@
     <version>0.0.2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Quarkus Fluency Fluentd - Parent</name>
+    <description>A Quarkus extension that integrates Fluency (Fluentd/Fluent Bit client) with Quarkus</description>
+    <url>https://github.com/yuokada/quarkus-fluency-fluentd</url>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>yuokada</id>
+            <name>Yukihiro Okada</name>
+            <url>https://github.com/yuokada</url>
+        </developer>
+    </developers>
 
     <modules>
         <module>deployment</module>
