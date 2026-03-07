@@ -1,0 +1,31 @@
+---
+extension:
+  groupId: "io.github.yuokada.quarkus.extension"
+  artifactId: "quarkus-fluency-fluentd"
+  name: "Quarkus Fluency Fluentd"
+  nameSource: "EXTENSION_METADATA"
+  detected: true
+elements:
+  io.github.yuokada.quarkus.extension.fluency.fluentd.runtime.FluencyConfig.bufferChunkInitialSize:
+    description: "Buffer chunk initial size (bytes). Default is 1 MiB. Must be positive\
+      \ and less than {@link\n#bufferChunkRetentionSize()}."
+    format: "JAVADOC"
+  io.github.yuokada.quarkus.extension.fluency.fluentd.runtime.FluencyConfig.bufferChunkRetentionSize:
+    description: "Buffer chunk retention size (bytes). Default is 4 MiB. Must be greater\
+      \ than {@link\n#bufferChunkInitialSize()}."
+    format: "JAVADOC"
+  io.github.yuokada.quarkus.extension.fluency.fluentd.runtime.FluencyConfig.bufferChunkRetentionTimeMillis:
+    description: "Buffer chunk retention time (ms)."
+    format: "JAVADOC"
+  io.github.yuokada.quarkus.extension.fluency.fluentd.runtime.FluencyConfig.enabled:
+    description: "Whether to enable log forwarding to Fluentd."
+    format: "JAVADOC"
+  io.github.yuokada.quarkus.extension.fluency.fluentd.runtime.FluencyConfig.host:
+    description: "Fluentd host. Must not be blank."
+    format: "JAVADOC"
+  io.github.yuokada.quarkus.extension.fluency.fluentd.runtime.FluencyConfig.port:
+    description: "Fluentd port. Must be between 1 and 65535."
+    format: "JAVADOC"
+  io.github.yuokada.quarkus.extension.fluency.fluentd.runtime.FluencyConfig.senderMaxRetryCount:
+    description: "Max retry count for sending."
+    format: "JAVADOC"

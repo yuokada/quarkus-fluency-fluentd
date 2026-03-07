@@ -10,13 +10,18 @@ import jakarta.inject.Inject;
 import org.jboss.logging.Logger;
 import org.komamitsu.fluency.Fluency;
 import org.komamitsu.fluency.fluentd.FluencyBuilderForFluentd;
+import io.quarkus.runtime.Startup;
 
 /**
  * CDI bean that manages the lifecycle of a {@link Fluency} client.
  *
+ * <p>The bean is eagerly initialized at startup ({@link Startup}) so that invalid configuration
+ * causes a clear startup failure rather than a confusing runtime error.
+ *
  * <p>Connection failures at startup are handled gracefully — the bean remains available but
  * silently drops events until Fluentd becomes reachable.
  */
+@Startup
 @ApplicationScoped
 public class FluencyClient {
 
@@ -32,10 +37,12 @@ public class FluencyClient {
             log.info("Fluency client is disabled (quarkus.fluency.enabled=false)");
             return;
         }
+        validateConfig();
         try {
             FluencyBuilderForFluentd builder = new FluencyBuilderForFluentd();
             builder.setSenderMaxRetryCount(config.senderMaxRetryCount());
             builder.setBufferChunkInitialSize(config.bufferChunkInitialSize());
+            builder.setBufferChunkRetentionSize(config.bufferChunkRetentionSize());
             builder.setBufferChunkRetentionTimeMillis(config.bufferChunkRetentionTimeMillis());
             fluency = builder.build(config.host(), config.port());
             log.infof("Fluency client initialized — target: %s:%d", config.host(), config.port());
@@ -43,6 +50,33 @@ public class FluencyClient {
             log.warnf(
                     "Failed to initialize Fluency client (%s). Log forwarding disabled.",
                     e.getMessage());
+        }
+    }
+
+    private void validateConfig() {
+        String host = config.host();
+        if (host == null || host.isBlank()) {
+            throw new IllegalStateException(
+                    "quarkus.fluency.host must not be blank (got: '" + host + "')");
+        }
+        int port = config.port();
+        if (port < 1 || port > 65535) {
+            throw new IllegalStateException(
+                    "quarkus.fluency.port must be between 1 and 65535 (got: " + port + ")");
+        }
+        int initialSize = config.bufferChunkInitialSize();
+        if (initialSize <= 0) {
+            throw new IllegalStateException(
+                    "quarkus.fluency.bufferChunkInitialSize must be positive (got: "
+                            + initialSize
+                            + ")");
+        }
+        int retentionSize = config.bufferChunkRetentionSize();
+        if (retentionSize <= 0) {
+            throw new IllegalStateException(
+                    "quarkus.fluency.bufferChunkRetentionSize must be positive (got: "
+                            + retentionSize
+                            + ")");
         }
     }
 

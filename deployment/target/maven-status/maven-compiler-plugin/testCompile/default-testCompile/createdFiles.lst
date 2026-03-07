@@ -1,0 +1,5 @@
+io/github/yuokada/quarkus/extension/fluency/fluentd/test/QuarkusFluencyFluentdDevModeTest.class
+io/github/yuokada/quarkus/extension/fluency/fluentd/test/QuarkusFluencyFluentdTest.class
+io/github/yuokada/quarkus/extension/fluency/fluentd/test/FluencyConfigValidationTest.class
+io/github/yuokada/quarkus/extension/fluency/fluentd/test/FluencyConfigPortValidationTest.class
+io/github/yuokada/quarkus/extension/fluency/fluentd/test/FluencyConfigBufferSizeValidationTest.class
