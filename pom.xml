@@ -13,6 +13,13 @@
         <module>integration-tests</module>
     </modules>
 
+    <scm>
+        <connection>scm:git:https://github.com/yuokada/quarkus-fluency-fluentd.git</connection>
+        <developerConnection>scm:git:git@github.com:yuokada/quarkus-fluency-fluentd.git</developerConnection>
+        <url>https://github.com/yuokada/quarkus-fluency-fluentd</url>
+        <tag>HEAD</tag>
+    </scm>
+
     <properties>
         <compiler-plugin.version>3.15.0</compiler-plugin.version>
         <failsafe-plugin.version>${surefire-plugin.version}</failsafe-plugin.version>
@@ -22,6 +29,7 @@
         <fluency.version>2.7.4</fluency.version>
         <quarkus.version>3.27.0</quarkus.version>
         <surefire-plugin.version>3.5.5</surefire-plugin.version>
+        <maven-release-plugin.version>3.3.1</maven-release-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -71,6 +79,16 @@
                     <version>${compiler-plugin.version}</version>
                     <configuration>
                         <parameters>true</parameters>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>${maven-release-plugin.version}</version>
+                    <configuration>
+                        <autoVersionSubmodules>true</autoVersionSubmodules>
+                        <tagNameFormat>v@{project.version}</tagNameFormat>
+                        <releaseProfiles>release</releaseProfiles>
                     </configuration>
                 </plugin>
             </plugins>
