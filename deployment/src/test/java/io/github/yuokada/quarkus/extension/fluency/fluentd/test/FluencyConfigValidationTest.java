@@ -9,16 +9,6 @@ import io.quarkus.test.QuarkusUnitTest;
 
 public class FluencyConfigValidationTest {
 
-    static boolean hasCause(Throwable t, Class<?> type) {
-        while (t != null) {
-            if (type.isInstance(t)) {
-                return true;
-            }
-            t = t.getCause();
-        }
-        return false;
-    }
-
     @RegisterExtension
     static final QuarkusUnitTest unitTest =
             new QuarkusUnitTest()
@@ -27,7 +17,7 @@ public class FluencyConfigValidationTest {
                     .assertException(
                             t ->
                                     Assertions.assertTrue(
-                                            hasCause(t, IllegalStateException.class),
+                                            TestUtils.hasCause(t, IllegalStateException.class),
                                             "Expected IllegalStateException in cause chain, got: "
                                                     + t));
 
