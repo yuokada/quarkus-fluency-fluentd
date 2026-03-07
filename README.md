@@ -22,7 +22,7 @@ Add the runtime artifact to your project:
 <dependency>
     <groupId>io.github.yuokada.quarkus.extension</groupId>
     <artifactId>quarkus-fluency-fluentd</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>0.0.6-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -82,6 +82,7 @@ All properties are under the `quarkus.fluency` prefix.
 | `quarkus.fluency.enabled` | `true` | Set to `false` to disable log forwarding entirely |
 | `quarkus.fluency.sender-max-retry-count` | `4` | Max send retry attempts |
 | `quarkus.fluency.buffer-chunk-initial-size` | `1048576` | Buffer chunk initial size in bytes (1 MiB); must be less than retention size |
+| `quarkus.fluency.buffer-chunk-retention-size` | `4194304` | Buffer chunk retention size in bytes (4 MiB); must be greater than initial size |
 | `quarkus.fluency.buffer-chunk-retention-time-millis` | `1000` | Buffer flush interval in milliseconds |
 
 Example `application.properties`:
