@@ -124,6 +124,8 @@
                           </importOrder>
                           <removeUnusedImports/>
                           <forbidWildcardImports/>
+                          <trimTrailingWhitespace/>
+                          <endWithNewline/>
                         </java>
                     </configuration>
                     <executions>
