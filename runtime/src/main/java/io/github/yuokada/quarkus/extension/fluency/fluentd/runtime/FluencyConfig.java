@@ -9,11 +9,11 @@ import io.smallrye.config.WithDefault;
 @ConfigRoot(phase = ConfigPhase.RUN_TIME)
 public interface FluencyConfig {
 
-    /** Fluentd host. */
+    /** Fluentd host. Must not be blank. */
     @WithDefault("localhost")
     String host();
 
-    /** Fluentd port. */
+    /** Fluentd port. Must be between 1 and 65535. */
     @WithDefault("24224")
     int port();
 

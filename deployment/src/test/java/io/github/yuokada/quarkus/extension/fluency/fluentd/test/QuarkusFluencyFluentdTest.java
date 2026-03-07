@@ -66,3 +66,75 @@ public class QuarkusFluencyFluentdTest {
                 () -> validatingClient.emit("myapp.events.user", Map.of("userId", "123")));
     }
 }
+
+class FluencyConfigValidationTest {
+
+    @RegisterExtension
+    static final QuarkusUnitTest unitTest =
+            new QuarkusUnitTest()
+                    .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class))
+                    .overrideConfigKey("quarkus.fluency.host", " ")
+                    .assertException(
+                            t ->
+                                    Assertions.assertTrue(
+                                            hasCause(t, IllegalStateException.class),
+                                            "Expected IllegalStateException in cause chain, got: "
+                                                    + t));
+
+    @Test
+    public void testBlankHostFailsStartup() {
+        Assertions.fail("Application should not have started with blank host");
+    }
+
+    static boolean hasCause(Throwable t, Class<?> type) {
+        while (t != null) {
+            if (type.isInstance(t)) {
+                return true;
+            }
+            t = t.getCause();
+        }
+        return false;
+    }
+}
+
+class FluencyConfigPortValidationTest {
+
+    @RegisterExtension
+    static final QuarkusUnitTest zeroPortTest =
+            new QuarkusUnitTest()
+                    .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class))
+                    .overrideConfigKey("quarkus.fluency.port", "0")
+                    .assertException(
+                            t ->
+                                    Assertions.assertTrue(
+                                            FluencyConfigValidationTest.hasCause(
+                                                    t, IllegalStateException.class),
+                                            "Expected IllegalStateException for port=0, got: "
+                                                    + t));
+
+    @Test
+    public void testZeroPortFailsStartup() {
+        Assertions.fail("Application should not have started with port=0");
+    }
+}
+
+class FluencyConfigBufferSizeValidationTest {
+
+    @RegisterExtension
+    static final QuarkusUnitTest negativeBufferTest =
+            new QuarkusUnitTest()
+                    .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class))
+                    .overrideConfigKey("quarkus.fluency.buffer-chunk-initial-size", "-1")
+                    .assertException(
+                            t ->
+                                    Assertions.assertTrue(
+                                            FluencyConfigValidationTest.hasCause(
+                                                    t, IllegalStateException.class),
+                                            "Expected IllegalStateException for negative bufferChunkInitialSize, got: "
+                                                    + t));
+
+    @Test
+    public void testNegativeBufferSizeFailsStartup() {
+        Assertions.fail("Application should not have started with negative bufferChunkInitialSize");
+    }
+}
