@@ -78,6 +78,14 @@ public class FluencyClient {
                             + retentionSize
                             + ")");
         }
+        if (initialSize >= retentionSize) {
+            throw new IllegalStateException(
+                    "quarkus.fluency.buffer-chunk-initial-size ("
+                            + initialSize
+                            + ") must be less than quarkus.fluency.buffer-chunk-retention-size ("
+                            + retentionSize
+                            + ")");
+        }
     }
 
     /**
