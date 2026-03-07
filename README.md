@@ -1,5 +1,8 @@
 # Quarkus Fluency Fluentd Extension
 [![CI](https://github.com/yuokada/quarkus-fluency-fluentd/actions/workflows/ci.yml/badge.svg)](https://github.com/yuokada/quarkus-fluency-fluentd/actions/workflows/ci.yml)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.yuokada.quarkus.extension/quarkus-fluency-fluentd)](https://central.sonatype.com/artifact/io.github.yuokada.quarkus.extension/quarkus-fluency-fluentd)
+[![Javadoc](https://javadoc.io/badge2/io.github.yuokada.quarkus.extension/quarkus-fluency-fluentd/javadoc.svg)](https://javadoc.io/doc/io.github.yuokada.quarkus.extension/quarkus-fluency-fluentd)
+[![Java 17+](https://img.shields.io/badge/Java-17%2B-blue)](https://adoptium.net/)
 
 A Quarkus extension that integrates [Fluency](https://github.com/komamitsu/fluency) — a high-performance [Fluentd](https://www.fluentd.org/) / [Fluent Bit](https://fluentbit.io/) client for Java — into your Quarkus application as a managed CDI bean.
 
