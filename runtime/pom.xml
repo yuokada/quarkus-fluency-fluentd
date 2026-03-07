@@ -25,6 +25,12 @@
             <artifactId>fluency-fluentd</artifactId>
             <version>${fluency.version}</version>
         </dependency>
+        <!-- Optional: health check is only registered when smallrye-health is on the classpath -->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-smallrye-health</artifactId>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
     <build>
