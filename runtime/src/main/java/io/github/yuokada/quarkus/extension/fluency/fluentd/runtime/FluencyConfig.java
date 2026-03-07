@@ -1,10 +1,5 @@
 package io.github.yuokada.quarkus.extension.fluency.fluentd.runtime;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Positive;
-
 import io.quarkus.runtime.annotations.ConfigPhase;
 import io.quarkus.runtime.annotations.ConfigRoot;
 import io.smallrye.config.ConfigMapping;
@@ -15,13 +10,10 @@ import io.smallrye.config.WithDefault;
 public interface FluencyConfig {
 
     /** Fluentd host. Must not be blank. */
-    @NotBlank
     @WithDefault("localhost")
     String host();
 
     /** Fluentd port. Must be between 1 and 65535. */
-    @Min(1)
-    @Max(65535)
     @WithDefault("24224")
     int port();
 
@@ -37,7 +29,6 @@ public interface FluencyConfig {
      * Buffer chunk initial size (bytes). Default is 1 MiB. Must be positive and less than {@link
      * #bufferChunkRetentionSize()}.
      */
-    @Positive
     @WithDefault("1048576")
     int bufferChunkInitialSize();
 
@@ -45,7 +36,6 @@ public interface FluencyConfig {
      * Buffer chunk retention size (bytes). Default is 4 MiB. Must be greater than {@link
      * #bufferChunkInitialSize()}.
      */
-    @Positive
     @WithDefault("4194304")
     int bufferChunkRetentionSize();
 

@@ -16,10 +16,6 @@
             <artifactId>quarkus-arc-deployment</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-hibernate-validator-deployment</artifactId>
-        </dependency>
-        <dependency>
             <groupId>io.github.yuokada.quarkus.extension</groupId>
             <artifactId>quarkus-fluency-fluentd</artifactId>
             <version>${project.version}</version>
