@@ -33,72 +33,72 @@ import io.github.yuokada.quarkus.extension.fluency.fluentd.runtime.ValidatingFlu
 @ApplicationScoped
 public class QuarkusFluencyFluentdResource {
 
-  @Inject FluencyClient fluencyClient;
+    @Inject FluencyClient fluencyClient;
 
-  @Inject ValidatingFluencyClient validatingFluencyClient;
+    @Inject ValidatingFluencyClient validatingFluencyClient;
 
-  @GET
-  public String hello() {
-    return "Hello quarkus-fluency-fluentd";
-  }
-
-  /** Emits a test record and reports whether it was accepted. */
-  @POST
-  @Path("/emit")
-  public Response emit(@QueryParam("tag") String tag, @QueryParam("message") String message) {
-    String resolvedTag = tag != null ? tag : "myapp.default";
-    String resolvedMessage = message != null ? message : "test";
-
-    Map<String, Object> data = new LinkedHashMap<>();
-    data.put("message", resolvedMessage);
-    data.put("source", "quarkus-fluency-fluentd");
-
-    boolean accepted = fluencyClient.emit(resolvedTag, data);
-    if (accepted) {
-      return Response.ok("Emitted to tag: " + resolvedTag).build();
-    } else {
-      return Response.status(Response.Status.SERVICE_UNAVAILABLE)
-          .entity("Fluentd not available")
-          .build();
+    @GET
+    public String hello() {
+        return "Hello quarkus-fluency-fluentd";
     }
-  }
 
-  /**
-   * Like /emit but delegates to {@link ValidatingFluencyClient}. Returns 400 for invalid tag or
-   * missing message instead of silently failing.
-   */
-  @POST
-  @Path("/validated-emit")
-  public Response validatedEmit(
-      @QueryParam("tag") String tag, @QueryParam("message") String message) {
-    String resolvedTag = tag != null ? tag : "";
-    String resolvedMessage = message != null ? message : "test";
+    /** Emits a test record and reports whether it was accepted. */
+    @POST
+    @Path("/emit")
+    public Response emit(@QueryParam("tag") String tag, @QueryParam("message") String message) {
+        String resolvedTag = tag != null ? tag : "myapp.default";
+        String resolvedMessage = message != null ? message : "test";
 
-    Map<String, Object> data = new LinkedHashMap<>();
-    data.put("message", resolvedMessage);
-    data.put("source", "quarkus-fluency-fluentd");
+        Map<String, Object> data = new LinkedHashMap<>();
+        data.put("message", resolvedMessage);
+        data.put("source", "quarkus-fluency-fluentd");
 
-    try {
-      boolean accepted = validatingFluencyClient.emit(resolvedTag, data);
-      if (accepted) {
-        return Response.ok("Emitted to tag: " + resolvedTag).build();
-      } else {
-        return Response.status(Response.Status.SERVICE_UNAVAILABLE)
-            .entity("Fluentd not available")
-            .build();
-      }
-    } catch (IllegalArgumentException e) {
-      return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        boolean accepted = fluencyClient.emit(resolvedTag, data);
+        if (accepted) {
+            return Response.ok("Emitted to tag: " + resolvedTag).build();
+        } else {
+            return Response.status(Response.Status.SERVICE_UNAVAILABLE)
+                    .entity("Fluentd not available")
+                    .build();
+        }
     }
-  }
 
-  /** Health-style check — reports whether the Fluency client is connected. */
-  @GET
-  @Path("/status")
-  public Response status() {
-    if (fluencyClient.isAvailable()) {
-      return Response.ok("connected").build();
+    /**
+     * Like /emit but delegates to {@link ValidatingFluencyClient}. Returns 400 for invalid tag or
+     * missing message instead of silently failing.
+     */
+    @POST
+    @Path("/validated-emit")
+    public Response validatedEmit(
+            @QueryParam("tag") String tag, @QueryParam("message") String message) {
+        String resolvedTag = tag != null ? tag : "";
+        String resolvedMessage = message != null ? message : "test";
+
+        Map<String, Object> data = new LinkedHashMap<>();
+        data.put("message", resolvedMessage);
+        data.put("source", "quarkus-fluency-fluentd");
+
+        try {
+            boolean accepted = validatingFluencyClient.emit(resolvedTag, data);
+            if (accepted) {
+                return Response.ok("Emitted to tag: " + resolvedTag).build();
+            } else {
+                return Response.status(Response.Status.SERVICE_UNAVAILABLE)
+                        .entity("Fluentd not available")
+                        .build();
+            }
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
     }
-    return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity("disconnected").build();
-  }
+
+    /** Health-style check — reports whether the Fluency client is connected. */
+    @GET
+    @Path("/status")
+    public Response status() {
+        if (fluencyClient.isAvailable()) {
+            return Response.ok("connected").build();
+        }
+        return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity("disconnected").build();
+    }
 }
