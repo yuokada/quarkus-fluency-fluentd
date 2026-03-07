@@ -1,9 +1,0 @@
--------------------------------------------------------------------------------
-Test set: io.github.yuokada.quarkus.extension.fluency.fluentd.test.TestPortZero
--------------------------------------------------------------------------------
-Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 1.905 s <<< FAILURE! -- in io.github.yuokada.quarkus.extension.fluency.fluentd.test.TestPortZero
-io.github.yuokada.quarkus.extension.fluency.fluentd.test.TestPortZero -- Time elapsed: 1.905 s <<< FAILURE!
-org.opentest4j.AssertionFailedError: The build was expected to fail
-	at io.quarkus.test.QuarkusUnitTest.beforeAll(QuarkusUnitTest.java:714)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
-
