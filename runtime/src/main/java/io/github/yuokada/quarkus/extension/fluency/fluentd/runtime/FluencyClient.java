@@ -36,6 +36,7 @@ public class FluencyClient {
             FluencyBuilderForFluentd builder = new FluencyBuilderForFluentd();
             builder.setSenderMaxRetryCount(config.senderMaxRetryCount());
             builder.setBufferChunkInitialSize(config.bufferChunkInitialSize());
+            builder.setBufferChunkRetentionSize(config.bufferChunkRetentionSize());
             builder.setBufferChunkRetentionTimeMillis(config.bufferChunkRetentionTimeMillis());
             fluency = builder.build(config.host(), config.port());
             log.infof("Fluency client initialized — target: %s:%d", config.host(), config.port());
