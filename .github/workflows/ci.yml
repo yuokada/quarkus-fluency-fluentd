@@ -33,7 +33,7 @@ jobs:
         run: ./mvnw -B install -pl .,deployment,runtime
 
       - name: Integration test (JVM mode)
-        run: ./mvnw -B verify -pl integration-tests -DskipITs=false
+        run: ./mvnw -B verify -f integration-tests/pom.xml -DskipITs=false
 
   native:
     name: Native image test
@@ -48,5 +48,8 @@ jobs:
           distribution: graalvm-community
           cache: maven
           github-token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build and native test
-        run: ./mvnw -B verify -Pnative-image -Dsurefire.skip=true
+      - name: Build native (runtime + deployment)
+        run: ./mvnw -B install -pl .,deployment,runtime -Pnative-image -Dsurefire.skip=true
+
+      - name: Integration test (native mode)
+        run: ./mvnw -B verify -f integration-tests/pom.xml -Pnative-image -Dsurefire.skip=true
