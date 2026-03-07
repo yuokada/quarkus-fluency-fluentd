@@ -86,6 +86,20 @@ public class FluencyClient {
                             + retentionSize
                             + ")");
         }
+        int retryCount = config.senderMaxRetryCount();
+        if (retryCount < 0) {
+            throw new IllegalStateException(
+                    "quarkus.fluency.sender-max-retry-count must be >= 0 (got: "
+                            + retryCount
+                            + ")");
+        }
+        int retentionTimeMillis = config.bufferChunkRetentionTimeMillis();
+        if (retentionTimeMillis <= 0) {
+            throw new IllegalStateException(
+                    "quarkus.fluency.buffer-chunk-retention-time-millis must be positive (got: "
+                            + retentionTimeMillis
+                            + ")");
+        }
     }
 
     /**

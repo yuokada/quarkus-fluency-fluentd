@@ -161,3 +161,46 @@ class FluencyConfigBufferSizeCrossFieldValidationTest {
                 "Application should not have started when buffer-chunk-initial-size >= buffer-chunk-retention-size");
     }
 }
+
+class FluencyConfigSenderMaxRetryCountValidationTest {
+
+    @RegisterExtension
+    static final QuarkusUnitTest negativeSenderMaxRetryCountTest =
+            new QuarkusUnitTest()
+                    .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class))
+                    .overrideConfigKey("quarkus.fluency.sender-max-retry-count", "-1")
+                    .assertException(
+                            t ->
+                                    Assertions.assertTrue(
+                                            FluencyConfigValidationTest.hasCause(
+                                                    t, IllegalStateException.class),
+                                            "Expected IllegalStateException for negative senderMaxRetryCount, got: "
+                                                    + t));
+
+    @Test
+    public void testNegativeSenderMaxRetryCountFailsStartup() {
+        Assertions.fail("Application should not have started with negative sender-max-retry-count");
+    }
+}
+
+class FluencyConfigBufferChunkRetentionTimeMillisValidationTest {
+
+    @RegisterExtension
+    static final QuarkusUnitTest zeroRetentionTimeTest =
+            new QuarkusUnitTest()
+                    .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class))
+                    .overrideConfigKey("quarkus.fluency.buffer-chunk-retention-time-millis", "0")
+                    .assertException(
+                            t ->
+                                    Assertions.assertTrue(
+                                            FluencyConfigValidationTest.hasCause(
+                                                    t, IllegalStateException.class),
+                                            "Expected IllegalStateException for zero bufferChunkRetentionTimeMillis, got: "
+                                                    + t));
+
+    @Test
+    public void testZeroRetentionTimeMillisFailsStartup() {
+        Assertions.fail(
+                "Application should not have started with zero buffer-chunk-retention-time-millis");
+    }
+}
