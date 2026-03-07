@@ -43,6 +43,28 @@ public class MyService {
 
 `emit()` returns `false` (and does not throw) when Fluentd is unreachable, so no special error handling is required in application code.
 
+## Centralized Log Management
+
+This extension is one approach to forwarding application events to a centralized log management stack such as **EFK (Elasticsearch + Fluentd + Kibana)**.
+
+The official Quarkus guide — [Centralized Log Management](https://quarkus.io/guides/centralized-log-management) — covers an alternative approach using Quarkus's built-in **syslog handler** to push logs to Fluentd:
+
+### Comparison with alternatives
+
+| | `quarkus-logging-gelf` | Quarkus syslog handler | This extension (Fluency) |
+|---|---|---|---|
+| **Status** | **Deprecated** | Active | Active |
+| **Protocol** | GELF over UDP/TCP (port 12201) | Syslog UDP/TCP (port 5140) | Fluentd forward TCP (port 24224) |
+| **Transport** | jboss-logmanager log handler | jboss-logmanager log handler | Fluency client library |
+| **What gets sent** | All log output automatically | All log output automatically | Only records explicitly emitted via `emit()` |
+| **Wire format** | GELF JSON | Syslog (RFC 5424) | MessagePack (Fluentd native) |
+| **Primary target** | Graylog (Fluentd via plugin) | Fluentd / any syslog sink | Fluentd / Fluent Bit natively |
+| **Config prefix** | `quarkus.log.handler.gelf.*` | `quarkus.log.syslog.*` | `quarkus.fluency.*` |
+
+- Use **quarkus-logging-gelf** — not recommended; deprecated in favour of OpenTelemetry Logging or the socket handler.
+- Use the **syslog handler** when you want all Quarkus log output forwarded automatically with no code changes.
+- Use **this extension** when you need to emit specific structured events (audit logs, metrics, domain events) from application code with full control over the Fluentd tag and record payload.
+
 ## Configuration
 
 All properties are under the `quarkus.fluency` prefix.
