@@ -109,6 +109,20 @@ quarkus-fluency-fluentd-parent
 └── integration-tests/  # Quarkus application exercising the extension
 ```
 
+## Releasing
+
+This project uses `maven-release-plugin`. Because `integration-tests` is intentionally excluded from the parent `<modules>` (to prevent it from being published to Maven Central), the release plugin does **not** update its parent version automatically.
+
+After each release, manually update the `<parent><version>` in `integration-tests/pom.xml` to the next development version:
+
+```xml
+<parent>
+    <groupId>io.github.yuokada.quarkus.extension</groupId>
+    <artifactId>quarkus-fluency-fluentd-parent</artifactId>
+    <version>X.Y.Z-SNAPSHOT</version>  <!-- update to match root pom.xml -->
+</parent>
+```
+
 ## License
 
-Apache License 2.0
+MIT License
