@@ -138,3 +138,26 @@ class FluencyConfigBufferSizeValidationTest {
         Assertions.fail("Application should not have started with negative bufferChunkInitialSize");
     }
 }
+
+class FluencyConfigBufferSizeCrossFieldValidationTest {
+
+    @RegisterExtension
+    static final QuarkusUnitTest initialSizeGeRetentionSizeTest =
+            new QuarkusUnitTest()
+                    .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class))
+                    .overrideConfigKey("quarkus.fluency.buffer-chunk-initial-size", "8388608")
+                    .overrideConfigKey("quarkus.fluency.buffer-chunk-retention-size", "4194304")
+                    .assertException(
+                            t ->
+                                    Assertions.assertTrue(
+                                            FluencyConfigValidationTest.hasCause(
+                                                    t, IllegalStateException.class),
+                                            "Expected IllegalStateException when initialSize >= retentionSize, got: "
+                                                    + t));
+
+    @Test
+    public void testInitialSizeGreaterThanRetentionSizeFailsStartup() {
+        Assertions.fail(
+                "Application should not have started when buffer-chunk-initial-size >= buffer-chunk-retention-size");
+    }
+}
