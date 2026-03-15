@@ -151,6 +151,7 @@
     <profiles>
         <profile>
             <id>release</id>
+            <!-- This profile is intended for the GitHub Actions Maven Central publishing workflow. -->
             <build>
                 <plugins>
                     <!-- Generate sources jar (required by Maven Central) -->

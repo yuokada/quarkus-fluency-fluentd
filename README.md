@@ -131,28 +131,15 @@ quarkus-fluency-fluentd-parent
 
 ## Releasing
 
-This project releases to Maven Central with `maven-release-plugin`, the `release` Maven profile, GPG signing, and the Sonatype Central Portal publisher.
+This project releases to Maven Central from GitHub Actions. The `release` Maven profile is intended for the GitHub Actions workflow in `.github/workflows/maven-central-publish.yml`, not for routine local use.
 
 ### Release prerequisites
 
-Before starting a release, make sure the following are configured on your machine:
+Before starting a release, make sure the following are configured:
 
 - Push access to this GitHub repository
-- A GPG key available to Maven for artifact signing
-- A `central` server entry in `~/.m2/settings.xml` for Sonatype Central Portal publishing
+- GitHub Actions secrets for Maven Central publishing (`CENTRAL_USERNAME`, `CENTRAL_PASSWORD`, `GPG_PRIVATE_KEY`, `GPG_PASSPHRASE`)
 - A clean working tree (`git status`)
-
-Example `settings.xml` server entry:
-
-```xml
-<servers>
-    <server>
-        <id>central</id>
-        <username>${env.CENTRAL_USERNAME}</username>
-        <password>${env.CENTRAL_PASSWORD}</password>
-    </server>
-</servers>
-```
 
 ### Release steps
 
@@ -163,23 +150,37 @@ Example `settings.xml` server entry:
    ./mvnw verify
    ```
 
-2. Run the Maven release:
+2. Bump project versions and create the release tag. This project uses `maven-release-plugin` for version/tag management:
 
    ```bash
-   ./mvnw release:clean release:prepare release:perform -Darguments="-DskipTests"
+   ./mvnw release:clean release:prepare
    ```
 
    What this does:
 
    - updates the root, `runtime`, and `deployment` module versions
-   - creates and pushes a Git tag in the form `vX.Y.Z`
-   - runs the `release` profile during `release:perform`
-   - signs and publishes artifacts to Maven Central
+   - creates a Git tag in the form `vX.Y.Z`
+   - updates the repository to the next development version
 
-3. Confirm the release was published:
+3. Push the release commit and tag to GitHub:
+
+   ```bash
+   git push origin master
+   git push origin vX.Y.Z
+   ```
+
+4. GitHub Actions publishes the package to Maven Central:
+
+   - the workflow `.github/workflows/maven-central-publish.yml` runs on tag push
+   - that workflow activates `-Prelease`
+   - the `release` profile performs source/javadoc generation, GPG signing, and Central publishing
+
+5. Confirm the release was published:
 
    - check the generated GitHub tag/release commit
    - verify the new version appears in Maven Central
+
+If you run `-Prelease` locally, you must provide the same GPG key and Maven Central credentials that GitHub Actions injects. Otherwise artifact signing or publishing will fail.
 
 ### Post-release manual step
 
