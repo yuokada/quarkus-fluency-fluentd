@@ -131,16 +131,76 @@ quarkus-fluency-fluentd-parent
 
 ## Releasing
 
-This project uses `maven-release-plugin`. Because `integration-tests` is intentionally excluded from the parent `<modules>` (to prevent it from being published to Maven Central), the release plugin does **not** update its parent version automatically.
+This project releases to Maven Central with `maven-release-plugin`, the `release` Maven profile, GPG signing, and the Sonatype Central Portal publisher.
 
-After each release, manually update the `<parent><version>` in `integration-tests/pom.xml` to the next development version:
+### Release prerequisites
+
+Before starting a release, make sure the following are configured on your machine:
+
+- Push access to this GitHub repository
+- A GPG key available to Maven for artifact signing
+- A `central` server entry in `~/.m2/settings.xml` for Sonatype Central Portal publishing
+- A clean working tree (`git status`)
+
+Example `settings.xml` server entry:
+
+```xml
+<servers>
+    <server>
+        <id>central</id>
+        <username>${env.CENTRAL_USERNAME}</username>
+        <password>${env.CENTRAL_PASSWORD}</password>
+    </server>
+</servers>
+```
+
+### Release steps
+
+1. Verify the branch state and test suite:
+
+   ```bash
+   git status
+   ./mvnw verify
+   ```
+
+2. Run the Maven release:
+
+   ```bash
+   ./mvnw release:clean release:prepare release:perform -Darguments="-DskipTests"
+   ```
+
+   What this does:
+
+   - updates the root, `runtime`, and `deployment` module versions
+   - creates and pushes a Git tag in the form `vX.Y.Z`
+   - runs the `release` profile during `release:perform`
+   - signs and publishes artifacts to Maven Central
+
+3. Confirm the release was published:
+
+   - check the generated GitHub tag/release commit
+   - verify the new version appears in Maven Central
+
+### Post-release manual step
+
+`integration-tests` is intentionally excluded from the parent `<modules>` so it is not published to Maven Central. Because of that, the release plugin does **not** update its parent version automatically.
+
+After each release, manually update the `<parent><version>` in `integration-tests/pom.xml` to the next development version so it matches the root `pom.xml` again:
 
 ```xml
 <parent>
     <groupId>io.github.yuokada.quarkus.extension</groupId>
     <artifactId>quarkus-fluency-fluentd-parent</artifactId>
-    <version>X.Y.Z-SNAPSHOT</version>  <!-- update to match root pom.xml -->
+    <version>X.Y.Z-SNAPSHOT</version>
 </parent>
+```
+
+Then commit that follow-up change:
+
+```bash
+git add integration-tests/pom.xml
+git commit -m "chore: align integration-tests parent version after release"
+git push
 ```
 
 ## License
