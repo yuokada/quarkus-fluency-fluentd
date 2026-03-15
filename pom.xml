@@ -152,7 +152,6 @@
                     <configuration>
                         <!-- Quarkus-managed artifacts should be updated via the BOM version, not individually. -->
                         <processDependencyManagementTransitive>false</processDependencyManagementTransitive>
-                        <showVersionless>false</showVersionless>
                         <ignoredVersions>(?i).*[.-](alpha|beta|cr|m|milestone|rc)[.-]?[0-9]*</ignoredVersions>
                         <dependencyExcludes>
                             <dependencyExclude>io.quarkus:*</dependencyExclude>
