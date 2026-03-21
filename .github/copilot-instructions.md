@@ -19,6 +19,6 @@ Follow these repository instructions when working in this project.
 
 ## Validation
 
-- Prefer `./mvnw test` for unit and module-level behavior changes.
-- Prefer `./mvnw verify` when changes may affect integration or extension packaging behavior.
+- Prefer `./mvnw install -pl deployment,runtime` to build modules and run unit tests.
+- Prefer `./mvnw verify -pl integration-tests -DskipITs=false` to run integration tests.
 - Clearly distinguish between checks you ran and checks you did not run.
