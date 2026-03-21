@@ -27,8 +27,8 @@ public class QuarkusFluencyFluentdResourceTest {
         // No real Fluentd in tests — expect 200 (connected) or 503 (disconnected), not a 5xx crash
         int status =
                 given().when().get("/quarkus-fluency-fluentd/status").then().extract().statusCode();
-        Assertions.assertTrue(status == 200 || status == 503,
-                "Expected 200 or 503 but got: " + status);
+        Assertions.assertTrue(
+                status == 200 || status == 503, "Expected 200 or 503 but got: " + status);
     }
 
     @Test
@@ -40,8 +40,8 @@ public class QuarkusFluencyFluentdResourceTest {
                         .then()
                         .extract()
                         .statusCode();
-        Assertions.assertTrue(status == 200 || status == 503,
-                "Expected 200 or 503 but got: " + status);
+        Assertions.assertTrue(
+                status == 200 || status == 503, "Expected 200 or 503 but got: " + status);
     }
 
     @Test
@@ -54,8 +54,8 @@ public class QuarkusFluencyFluentdResourceTest {
                         .then()
                         .extract()
                         .statusCode();
-        Assertions.assertTrue(status == 200 || status == 503,
-                "Expected 200 or 503 but got: " + status);
+        Assertions.assertTrue(
+                status == 200 || status == 503, "Expected 200 or 503 but got: " + status);
     }
 
     @Test
@@ -74,5 +74,22 @@ public class QuarkusFluencyFluentdResourceTest {
                 .then()
                 .statusCode(400)
                 .body(containsString("invalid tag format"));
+    }
+
+    @Test
+    public void testReadinessHealthCheckIsRegistered() {
+        // The health check must be present in the readiness endpoint.
+        // When Fluentd is connected: status=200, when not: status=503 — both indicate the check
+        // ran.
+        // The response body must mention "fluentd" regardless of UP/DOWN state.
+        io.restassured.response.ValidatableResponse response =
+                given().when().get("/q/health/ready").then();
+
+        int status = response.extract().statusCode();
+        Assertions.assertTrue(
+                status == 200 || status == 503,
+                "Expected 200 (UP) or 503 (DOWN) from /q/health/ready but got: " + status);
+
+        response.body(containsString("fluentd"));
     }
 }
