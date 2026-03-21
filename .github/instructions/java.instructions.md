@@ -8,3 +8,4 @@ When editing Java or Maven files in this repository:
 - Prefer configuration and extension wiring that matches normal Quarkus extension patterns already present in the repository.
 - Keep parent POM changes compatible with all modules, not just one submodule.
 - If user-facing extension setup changes, update the README in the same change.
+- Adhere to the Google Java Format style guide, enforced by the Spotless plugin. Run `./mvnw spotless:apply` to format code.
