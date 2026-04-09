@@ -22,7 +22,7 @@ Add the runtime artifact to your project:
 <dependency>
     <groupId>io.github.yuokada.quarkus.extension</groupId>
     <artifactId>quarkus-fluency-fluentd</artifactId>
-    <version>0.0.6-SNAPSHOT</version>
+    <version>0.1.0-SNAPSHOT</version>
 </dependency>
 ```
 
