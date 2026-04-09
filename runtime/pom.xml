@@ -5,7 +5,7 @@
     <parent>
         <groupId>io.github.yuokada.quarkus.extension</groupId>
         <artifactId>quarkus-fluency-fluentd-parent</artifactId>
-        <version>0.0.8-SNAPSHOT</version>
+        <version>0.1.0</version>
     </parent>
     <artifactId>quarkus-fluency-fluentd</artifactId>
     <name>Quarkus Fluency Fluentd - Runtime</name>
