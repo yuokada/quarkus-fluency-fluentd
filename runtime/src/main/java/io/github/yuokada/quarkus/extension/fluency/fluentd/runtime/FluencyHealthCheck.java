@@ -18,7 +18,12 @@ import org.eclipse.microprofile.health.Readiness;
 @ApplicationScoped
 public class FluencyHealthCheck implements HealthCheck {
 
-    @Inject FluencyClient fluencyClient;
+    private final FluencyClient fluencyClient;
+
+    @Inject
+    public FluencyHealthCheck(FluencyClient fluencyClient) {
+        this.fluencyClient = fluencyClient;
+    }
 
     @Override
     public HealthCheckResponse call() {
