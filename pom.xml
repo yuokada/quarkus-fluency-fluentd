@@ -28,7 +28,6 @@
     <modules>
         <module>deployment</module>
         <module>runtime</module>
-        <module>integration-tests</module>
     </modules>
 
     <scm>
@@ -232,6 +231,12 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+        <profile>
+            <id>run-integration-tests</id>
+            <modules>
+                <module>integration-tests</module>
+            </modules>
         </profile>
     </profiles>
 </project>
