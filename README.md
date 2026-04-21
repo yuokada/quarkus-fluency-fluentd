@@ -99,8 +99,8 @@ quarkus.fluency.sender-max-retry-count=8
 # Build extension modules and run unit tests
 ./mvnw install -pl deployment,runtime
 
-# Build everything including integration tests (requires no live Fluentd)
-./mvnw verify -pl integration-tests -DskipITs=false
+# Build everything including integration tests (requires Docker for Testcontainers)
+./mvnw verify -Prun-integration-tests -DskipITs=false
 
 # Skip tests
 ./mvnw install -DskipTests
@@ -153,12 +153,12 @@ Before starting a release, make sure the following are configured:
 2. Bump project versions and create the release tag. This project uses `maven-release-plugin` for version/tag management:
 
    ```bash
-   ./mvnw release:clean release:prepare
+   ./mvnw release:clean release:prepare -Prun-integration-tests
    ```
 
    What this does:
 
-   - updates the root, `runtime`, and `deployment` module versions
+   - updates the root, `runtime`, `deployment`, and `integration-tests` module versions
    - creates a Git tag in the form `vX.Y.Z`
    - updates the repository to the next development version
 
@@ -181,28 +181,6 @@ Before starting a release, make sure the following are configured:
    - verify the new version appears in Maven Central
 
 If you run `-Prelease` locally, you must provide the same GPG key and Maven Central credentials that GitHub Actions injects. Otherwise artifact signing or publishing will fail.
-
-### Post-release manual step
-
-`integration-tests` is intentionally excluded from the parent `<modules>` so it is not published to Maven Central. Because of that, the release plugin does **not** update its parent version automatically.
-
-After each release, manually update the `<parent><version>` in `integration-tests/pom.xml` to the next development version so it matches the root `pom.xml` again:
-
-```xml
-<parent>
-    <groupId>io.github.yuokada.quarkus.extension</groupId>
-    <artifactId>quarkus-fluency-fluentd-parent</artifactId>
-    <version>X.Y.Z-SNAPSHOT</version>
-</parent>
-```
-
-Then commit that follow-up change:
-
-```bash
-git add integration-tests/pom.xml
-git commit -m "chore: align integration-tests parent version after release"
-git push
-```
 
 ## License
 
