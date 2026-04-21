@@ -28,6 +28,7 @@
     <modules>
         <module>deployment</module>
         <module>runtime</module>
+        <module>integration-tests</module>
     </modules>
 
     <scm>
@@ -227,6 +228,10 @@
                             <publishingServerId>central</publishingServerId>
                             <autoPublish>true</autoPublish>
                             <waitUntil>published</waitUntil>
+                            <!-- integration-tests is not a publishable library artifact -->
+                            <excludeArtifacts>
+                                <excludeArtifact>io.github.yuokada.quarkus.extension:quarkus-fluency-fluentd-integration-tests</excludeArtifact>
+                            </excludeArtifacts>
                         </configuration>
                     </plugin>
                 </plugins>
