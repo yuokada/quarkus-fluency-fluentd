@@ -100,7 +100,7 @@ quarkus.fluency.sender-max-retry-count=8
 ./mvnw install -pl deployment,runtime
 
 # Build everything including integration tests (requires Docker for Testcontainers)
-./mvnw verify -Prun-integration-tests -DskipITs=false
+./mvnw verify -DskipITs=false
 
 # Skip tests
 ./mvnw install -DskipTests
@@ -153,7 +153,7 @@ Before starting a release, make sure the following are configured:
 2. Bump project versions and create the release tag. This project uses `maven-release-plugin` for version/tag management:
 
    ```bash
-   ./mvnw release:clean release:prepare -Prun-integration-tests
+   ./mvnw release:clean release:prepare
    ```
 
    What this does:
