@@ -14,7 +14,7 @@ import io.quarkus.test.common.QuarkusTestResourceLifecycleManager;
 public class FluentdTestResource implements QuarkusTestResourceLifecycleManager {
 
     private static final Logger log = Logger.getLogger(FluentdTestResource.class);
-    private static final String IMAGE = "fluent/fluentd:v1.18-1";
+    private static final String IMAGE = "fluent/fluentd:v1.19-2";
     private static final int FORWARD_PORT = 24224;
 
     private GenericContainer<?> fluentd;
