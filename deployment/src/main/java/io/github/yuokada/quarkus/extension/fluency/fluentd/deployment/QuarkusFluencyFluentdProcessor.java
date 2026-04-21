@@ -5,6 +5,7 @@ import io.quarkus.deployment.annotations.BuildProducer;
 import io.quarkus.deployment.annotations.BuildStep;
 import io.quarkus.deployment.builditem.FeatureBuildItem;
 import io.quarkus.deployment.builditem.nativeimage.ReflectiveClassBuildItem;
+import io.quarkus.smallrye.health.deployment.spi.HealthBuildItem;
 
 import io.github.yuokada.quarkus.extension.fluency.fluentd.runtime.FluencyClient;
 import io.github.yuokada.quarkus.extension.fluency.fluentd.runtime.ValidatingFluencyClient;
@@ -35,5 +36,12 @@ class QuarkusFluencyFluentdProcessor {
                         "org.komamitsu.fluency.fluentd.FluencyBuilderForFluentd",
                         "org.komamitsu.fluency.Fluency",
                         "org.komamitsu.fluency.recordformat.FluentdRecordFormatter"));
+    }
+
+    @BuildStep
+    HealthBuildItem addHealthCheck(FluencyBuildTimeConfig buildTimeConfig) {
+        return new HealthBuildItem(
+                "io.github.yuokada.quarkus.extension.fluency.fluentd.runtime.FluencyHealthCheck",
+                buildTimeConfig.healthEnabled());
     }
 }

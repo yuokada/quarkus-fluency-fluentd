@@ -6,7 +6,9 @@ import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 
 @QuarkusTest
@@ -27,8 +29,8 @@ public class QuarkusFluencyFluentdResourceTest {
         // No real Fluentd in tests — expect 200 (connected) or 503 (disconnected), not a 5xx crash
         int status =
                 given().when().get("/quarkus-fluency-fluentd/status").then().extract().statusCode();
-        Assertions.assertTrue(status == 200 || status == 503,
-                "Expected 200 or 503 but got: " + status);
+        Assertions.assertTrue(
+                status == 200 || status == 503, "Expected 200 or 503 but got: " + status);
     }
 
     @Test
@@ -40,8 +42,8 @@ public class QuarkusFluencyFluentdResourceTest {
                         .then()
                         .extract()
                         .statusCode();
-        Assertions.assertTrue(status == 200 || status == 503,
-                "Expected 200 or 503 but got: " + status);
+        Assertions.assertTrue(
+                status == 200 || status == 503, "Expected 200 or 503 but got: " + status);
     }
 
     @Test
@@ -54,8 +56,8 @@ public class QuarkusFluencyFluentdResourceTest {
                         .then()
                         .extract()
                         .statusCode();
-        Assertions.assertTrue(status == 200 || status == 503,
-                "Expected 200 or 503 but got: " + status);
+        Assertions.assertTrue(
+                status == 200 || status == 503, "Expected 200 or 503 but got: " + status);
     }
 
     @Test
@@ -74,5 +76,18 @@ public class QuarkusFluencyFluentdResourceTest {
                 .then()
                 .statusCode(400)
                 .body(containsString("invalid tag format"));
+    }
+
+    @Test
+    public void testReadinessHealthCheckIsRegistered() {
+        // The health check must be present in the readiness endpoint. 200 (UP) or 503 (DOWN) both
+        // indicate the check ran. Asserting on the JSON structure (checks[].name == "fluentd")
+        // rather than a raw substring avoids false positives from other components that happen to
+        // include the word "fluentd" in their output.
+        given().when()
+                .get("/q/health/ready")
+                .then()
+                .statusCode(anyOf(is(200), is(503)))
+                .body("checks.name", hasItem("fluentd"));
     }
 }
