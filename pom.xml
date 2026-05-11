@@ -117,7 +117,7 @@
                           </excludes>
                           <palantirJavaFormat>
                             <version>${palantir-java-format.version}</version>
-                            <style>AOSP</style>
+                            <style>PALANTIR</style>
                             <formatJavadoc>false</formatJavadoc>
                           </palantirJavaFormat>
                           <importOrder>
