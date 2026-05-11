@@ -29,42 +29,35 @@ public class QuarkusFluencyFluentdTest {
     @Test
     public void testNullTagThrows() {
         Assertions.assertThrows(
-                IllegalArgumentException.class,
-                () -> validatingClient.emit(null, Map.of("key", "value")));
+                IllegalArgumentException.class, () -> validatingClient.emit(null, Map.of("key", "value")));
     }
 
     @Test
     public void testBlankTagThrows() {
         Assertions.assertThrows(
-                IllegalArgumentException.class,
-                () -> validatingClient.emit("   ", Map.of("key", "value")));
+                IllegalArgumentException.class, () -> validatingClient.emit("   ", Map.of("key", "value")));
     }
 
     @Test
     public void testInvalidTagFormatThrows() {
         Assertions.assertThrows(
-                IllegalArgumentException.class,
-                () -> validatingClient.emit(".start", Map.of("key", "value")));
+                IllegalArgumentException.class, () -> validatingClient.emit(".start", Map.of("key", "value")));
     }
 
     @Test
     public void testNullDataThrows() {
-        Assertions.assertThrows(
-                IllegalArgumentException.class, () -> validatingClient.emit("myapp.events", null));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> validatingClient.emit("myapp.events", null));
     }
 
     @Test
     public void testEmptyDataThrows() {
-        Assertions.assertThrows(
-                IllegalArgumentException.class,
-                () -> validatingClient.emit("myapp.events", Map.of()));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> validatingClient.emit("myapp.events", Map.of()));
     }
 
     @Test
     public void testValidTagAndDataDoesNotThrow() {
         // Valid arguments must not raise a validation exception regardless of Fluentd availability
-        Assertions.assertDoesNotThrow(
-                () -> validatingClient.emit("myapp.events.user", Map.of("userId", "123")));
+        Assertions.assertDoesNotThrow(() -> validatingClient.emit("myapp.events.user", Map.of("userId", "123")));
     }
 }
 
@@ -118,8 +111,7 @@ class FluencyConfigBufferSizeValidationTest {
             .overrideConfigKey("quarkus.fluency.buffer-chunk-initial-size", "-1")
             .assertException(t -> Assertions.assertTrue(
                     FluencyConfigValidationTest.hasCause(t, IllegalStateException.class),
-                    "Expected IllegalStateException for negative bufferChunkInitialSize, got: "
-                            + t));
+                    "Expected IllegalStateException for negative bufferChunkInitialSize, got: " + t));
 
     @Test
     public void testNegativeBufferSizeFailsStartup() {
@@ -169,12 +161,10 @@ class FluencyConfigBufferChunkRetentionTimeMillisValidationTest {
             .overrideConfigKey("quarkus.fluency.buffer-chunk-retention-time-millis", "0")
             .assertException(t -> Assertions.assertTrue(
                     FluencyConfigValidationTest.hasCause(t, IllegalStateException.class),
-                    "Expected IllegalStateException for zero bufferChunkRetentionTimeMillis, got: "
-                            + t));
+                    "Expected IllegalStateException for zero bufferChunkRetentionTimeMillis, got: " + t));
 
     @Test
     public void testZeroRetentionTimeMillisFailsStartup() {
-        Assertions.fail(
-                "Application should not have started with zero buffer-chunk-retention-time-millis");
+        Assertions.fail("Application should not have started with zero buffer-chunk-retention-time-millis");
     }
 }

@@ -35,8 +35,7 @@ public class ValidatingFluencyClient {
             throw new IllegalArgumentException("tag must not be null or blank");
         }
         if (!TAG_PATTERN.matcher(tag).matches()) {
-            throw new IllegalArgumentException(
-                    "invalid tag format '" + tag + "': must match " + TAG_PATTERN.pattern());
+            throw new IllegalArgumentException("invalid tag format '" + tag + "': must match " + TAG_PATTERN.pattern());
         }
     }
 

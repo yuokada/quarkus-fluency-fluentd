@@ -47,9 +47,7 @@ public class FluencyClientInstantSerializationTest {
         data.put("message", "instant-millis");
         data.put("timestamp_ms", FIXED.toEpochMilli());
 
-        Assertions.assertTrue(
-                fluencyClient.emit("it.instant.millis", data),
-                "long epoch millis must always serialize");
+        Assertions.assertTrue(fluencyClient.emit("it.instant.millis", data), "long epoch millis must always serialize");
     }
 
     @Test
@@ -58,9 +56,7 @@ public class FluencyClientInstantSerializationTest {
         data.put("message", "instant-iso");
         data.put("timestamp_iso", FIXED.toString());
 
-        Assertions.assertTrue(
-                fluencyClient.emit("it.instant.iso", data),
-                "ISO-8601 String must always serialize");
+        Assertions.assertTrue(fluencyClient.emit("it.instant.iso", data), "ISO-8601 String must always serialize");
     }
 
     @Test

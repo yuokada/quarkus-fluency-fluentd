@@ -78,8 +78,7 @@ public class QuarkusFluencyFluentdResource {
      */
     @POST
     @Path("/validated-emit")
-    public Response validatedEmit(
-            @QueryParam("tag") String tag, @QueryParam("message") String message) {
+    public Response validatedEmit(@QueryParam("tag") String tag, @QueryParam("message") String message) {
         String resolvedTag = tag != null ? tag : "";
         String resolvedMessage = message != null ? message : "test";
 

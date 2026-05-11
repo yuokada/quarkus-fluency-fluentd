@@ -15,11 +15,7 @@ public class QuarkusFluencyFluentdResourceTest {
 
     @Test
     public void testHelloEndpoint() {
-        given().when()
-                .get("/quarkus-fluency-fluentd")
-                .then()
-                .statusCode(200)
-                .body(is("Hello quarkus-fluency-fluentd"));
+        given().when().get("/quarkus-fluency-fluentd").then().statusCode(200).body(is("Hello quarkus-fluency-fluentd"));
     }
 
     @Test
@@ -30,8 +26,7 @@ public class QuarkusFluencyFluentdResourceTest {
                 .then()
                 .extract()
                 .statusCode();
-        Assertions.assertTrue(
-                status == 200 || status == 503, "Expected 200 or 503 but got: " + status);
+        Assertions.assertTrue(status == 200 || status == 503, "Expected 200 or 503 but got: " + status);
     }
 
     @Test
@@ -42,8 +37,7 @@ public class QuarkusFluencyFluentdResourceTest {
                 .then()
                 .extract()
                 .statusCode();
-        Assertions.assertTrue(
-                status == 200 || status == 503, "Expected 200 or 503 but got: " + status);
+        Assertions.assertTrue(status == 200 || status == 503, "Expected 200 or 503 but got: " + status);
     }
 
     @Test
@@ -54,8 +48,7 @@ public class QuarkusFluencyFluentdResourceTest {
                 .then()
                 .extract()
                 .statusCode();
-        Assertions.assertTrue(
-                status == 200 || status == 503, "Expected 200 or 503 but got: " + status);
+        Assertions.assertTrue(status == 200 || status == 503, "Expected 200 or 503 but got: " + status);
     }
 
     @Test
