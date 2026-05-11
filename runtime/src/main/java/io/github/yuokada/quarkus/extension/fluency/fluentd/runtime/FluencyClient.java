@@ -27,7 +27,8 @@ public class FluencyClient {
 
     private static final Logger log = Logger.getLogger(FluencyClient.class);
 
-    @Inject FluencyConfig config;
+    @Inject
+    FluencyConfig config;
 
     private Fluency fluency;
 
@@ -47,58 +48,46 @@ public class FluencyClient {
             fluency = builder.build(config.host(), config.port());
             log.infof("Fluency client initialized — target: %s:%d", config.host(), config.port());
         } catch (Exception e) {
-            log.warnf(
-                    "Failed to initialize Fluency client (%s). Log forwarding disabled.",
-                    e.getMessage());
+            log.warnf("Failed to initialize Fluency client (%s). Log forwarding disabled.", e.getMessage());
         }
     }
 
     private void validateConfig() {
         String host = config.host();
         if (host == null || host.isBlank()) {
-            throw new IllegalStateException(
-                    "quarkus.fluency.host must not be blank (got: '" + host + "')");
+            throw new IllegalStateException("quarkus.fluency.host must not be blank (got: '" + host + "')");
         }
         int port = config.port();
         if (port < 1 || port > 65535) {
-            throw new IllegalStateException(
-                    "quarkus.fluency.port must be between 1 and 65535 (got: " + port + ")");
+            throw new IllegalStateException("quarkus.fluency.port must be between 1 and 65535 (got: " + port + ")");
         }
         int initialSize = config.bufferChunkInitialSize();
         if (initialSize <= 0) {
             throw new IllegalStateException(
-                    "quarkus.fluency.bufferChunkInitialSize must be positive (got: "
-                            + initialSize
-                            + ")");
+                    "quarkus.fluency.bufferChunkInitialSize must be positive (got: " + initialSize + ")");
         }
         int retentionSize = config.bufferChunkRetentionSize();
         if (retentionSize <= 0) {
             throw new IllegalStateException(
-                    "quarkus.fluency.bufferChunkRetentionSize must be positive (got: "
-                            + retentionSize
-                            + ")");
+                    "quarkus.fluency.bufferChunkRetentionSize must be positive (got: " + retentionSize + ")");
         }
         if (initialSize >= retentionSize) {
-            throw new IllegalStateException(
-                    "quarkus.fluency.buffer-chunk-initial-size ("
-                            + initialSize
-                            + ") must be less than quarkus.fluency.buffer-chunk-retention-size ("
-                            + retentionSize
-                            + ")");
+            throw new IllegalStateException("quarkus.fluency.buffer-chunk-initial-size ("
+                    + initialSize
+                    + ") must be less than quarkus.fluency.buffer-chunk-retention-size ("
+                    + retentionSize
+                    + ")");
         }
         int retryCount = config.senderMaxRetryCount();
         if (retryCount < 0) {
             throw new IllegalStateException(
-                    "quarkus.fluency.sender-max-retry-count must be >= 0 (got: "
-                            + retryCount
-                            + ")");
+                    "quarkus.fluency.sender-max-retry-count must be >= 0 (got: " + retryCount + ")");
         }
         int retentionTimeMillis = config.bufferChunkRetentionTimeMillis();
         if (retentionTimeMillis <= 0) {
-            throw new IllegalStateException(
-                    "quarkus.fluency.buffer-chunk-retention-time-millis must be positive (got: "
-                            + retentionTimeMillis
-                            + ")");
+            throw new IllegalStateException("quarkus.fluency.buffer-chunk-retention-time-millis must be positive (got: "
+                    + retentionTimeMillis
+                    + ")");
         }
     }
 

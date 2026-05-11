@@ -54,7 +54,7 @@
         <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
         <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
         <spotless-maven-plugin.version>3.4.0</spotless-maven-plugin.version>
-        <google-java-format.version>1.25.2</google-java-format.version>
+        <palantir-java-format.version>2.39.0</palantir-java-format.version>
     </properties>
 
     <dependencyManagement>
@@ -115,11 +115,11 @@
                           <excludes>
                             <exclude>**/target/**</exclude>
                           </excludes>
-                          <googleJavaFormat>
-                            <version>${google-java-format.version}</version>
-                            <style>AOSP</style>
+                          <palantirJavaFormat>
+                            <version>${palantir-java-format.version}</version>
+                            <style>PALANTIR</style>
                             <formatJavadoc>false</formatJavadoc>
-                          </googleJavaFormat>
+                          </palantirJavaFormat>
                           <importOrder>
                             <order>java|jakarta|org.eclipse,com|org|picocli|io,,io.github.yuokada,\#</order>
                             <semanticSort>true</semanticSort>

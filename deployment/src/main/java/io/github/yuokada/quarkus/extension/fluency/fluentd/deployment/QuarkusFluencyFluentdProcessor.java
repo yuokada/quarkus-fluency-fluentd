@@ -30,10 +30,9 @@ class QuarkusFluencyFluentdProcessor {
     @BuildStep
     void registerForReflection(BuildProducer<ReflectiveClassBuildItem> reflectiveClass) {
         // Fluency uses reflection for MessagePack serialization in native image
-        reflectiveClass.produce(
-                ReflectiveClassBuildItem.serializationClass(
-                        "org.komamitsu.fluency.fluentd.FluencyBuilderForFluentd",
-                        "org.komamitsu.fluency.Fluency",
-                        "org.komamitsu.fluency.recordformat.FluentdRecordFormatter"));
+        reflectiveClass.produce(ReflectiveClassBuildItem.serializationClass(
+                "org.komamitsu.fluency.fluentd.FluencyBuilderForFluentd",
+                "org.komamitsu.fluency.Fluency",
+                "org.komamitsu.fluency.recordformat.FluentdRecordFormatter"));
     }
 }

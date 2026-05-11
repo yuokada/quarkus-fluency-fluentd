@@ -40,9 +40,11 @@ import io.github.yuokada.quarkus.extension.fluency.fluentd.runtime.ValidatingFlu
 @ApplicationScoped
 public class QuarkusFluencyFluentdResource {
 
-    @Inject FluencyClient fluencyClient;
+    @Inject
+    FluencyClient fluencyClient;
 
-    @Inject ValidatingFluencyClient validatingFluencyClient;
+    @Inject
+    ValidatingFluencyClient validatingFluencyClient;
 
     @GET
     public String hello() {
@@ -76,8 +78,7 @@ public class QuarkusFluencyFluentdResource {
      */
     @POST
     @Path("/validated-emit")
-    public Response validatedEmit(
-            @QueryParam("tag") String tag, @QueryParam("message") String message) {
+    public Response validatedEmit(@QueryParam("tag") String tag, @QueryParam("message") String message) {
         String resolvedTag = tag != null ? tag : "";
         String resolvedMessage = message != null ? message : "test";
 
@@ -95,7 +96,9 @@ public class QuarkusFluencyFluentdResource {
                         .build();
             }
         } catch (IllegalArgumentException e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("Invalid validated-emit request")
+                    .build();
         }
     }
 
@@ -106,6 +109,8 @@ public class QuarkusFluencyFluentdResource {
         if (fluencyClient.isAvailable()) {
             return Response.ok("connected").build();
         }
-        return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity("disconnected").build();
+        return Response.status(Response.Status.SERVICE_UNAVAILABLE)
+                .entity("disconnected")
+                .build();
     }
 }

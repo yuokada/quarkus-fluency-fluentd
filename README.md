@@ -108,7 +108,7 @@ quarkus.fluency.sender-max-retry-count=8
 
 ## Code Style
 
-This project uses [spotless-maven-plugin](https://github.com/diffplug/spotless/blob/main/plugin-maven/README.md) with [google-java-format](https://github.com/google/google-java-format) to enforce consistent Java formatting.
+This project uses [spotless-maven-plugin](https://github.com/diffplug/spotless/blob/main/plugin-maven/README.md) with [palantir-java-format](https://github.com/palantir/palantir-java-format) to enforce consistent Java formatting.
 
 ```bash
 # Check formatting (runs automatically during verify)
