@@ -98,7 +98,7 @@ public class QuarkusFluencyFluentdResource {
             }
         } catch (IllegalArgumentException e) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(e.getMessage())
+                    .entity("Invalid validated-emit request")
                     .build();
         }
     }

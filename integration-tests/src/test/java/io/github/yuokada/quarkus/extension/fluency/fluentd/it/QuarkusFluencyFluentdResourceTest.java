@@ -64,7 +64,7 @@ public class QuarkusFluencyFluentdResourceTest {
                 .post("/quarkus-fluency-fluentd/validated-emit?message=hello")
                 .then()
                 .statusCode(400)
-                .body(containsString("tag must not be null or blank"));
+                .body(containsString("Invalid validated-emit request"));
     }
 
     @Test
@@ -73,6 +73,6 @@ public class QuarkusFluencyFluentdResourceTest {
                 .post("/quarkus-fluency-fluentd/validated-emit?tag=.invalid&message=hello")
                 .then()
                 .statusCode(400)
-                .body(containsString("invalid tag format"));
+                .body(containsString("Invalid validated-emit request"));
     }
 }
