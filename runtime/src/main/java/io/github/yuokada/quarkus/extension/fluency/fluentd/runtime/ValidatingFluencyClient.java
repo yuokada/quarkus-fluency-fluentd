@@ -17,7 +17,8 @@ public class ValidatingFluencyClient {
 
     private static final Pattern TAG_PATTERN = Pattern.compile("[a-zA-Z0-9][a-zA-Z0-9._-]*");
 
-    @Inject FluencyClient delegate;
+    @Inject
+    FluencyClient delegate;
 
     public boolean emit(String tag, Map<String, Object> data) {
         validateTag(tag);

@@ -21,15 +21,13 @@ public class FluentdTestResource implements QuarkusTestResourceLifecycleManager 
 
     @Override
     public Map<String, String> start() {
-        fluentd =
-                new GenericContainer<>(DockerImageName.parse(IMAGE))
-                        .withExposedPorts(FORWARD_PORT)
-                        .withCopyFileToContainer(
-                                MountableFile.forHostPath(
-                                        Path.of("src/test/resources/fluent.conf")),
-                                "/fluentd/etc/fluent.conf")
-                        .waitingFor(Wait.forLogMessage(".*fluentd worker is now running.*\\n", 1))
-                        .withStartupTimeout(Duration.ofSeconds(90));
+        fluentd = new GenericContainer<>(DockerImageName.parse(IMAGE))
+                .withExposedPorts(FORWARD_PORT)
+                .withCopyFileToContainer(
+                        MountableFile.forHostPath(Path.of("src/test/resources/fluent.conf")),
+                        "/fluentd/etc/fluent.conf")
+                .waitingFor(Wait.forLogMessage(".*fluentd worker is now running.*\\n", 1))
+                .withStartupTimeout(Duration.ofSeconds(90));
 
         fluentd.start();
 

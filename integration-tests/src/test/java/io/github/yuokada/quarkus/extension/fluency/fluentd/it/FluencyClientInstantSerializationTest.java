@@ -38,7 +38,8 @@ public class FluencyClientInstantSerializationTest {
 
     private static final Instant FIXED = Instant.parse("2026-04-21T06:43:00Z");
 
-    @Inject FluencyClient fluencyClient;
+    @Inject
+    FluencyClient fluencyClient;
 
     @Test
     public void emitAcceptsInstantAsEpochMillis() {

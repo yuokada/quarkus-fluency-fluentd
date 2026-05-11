@@ -40,9 +40,11 @@ import io.github.yuokada.quarkus.extension.fluency.fluentd.runtime.ValidatingFlu
 @ApplicationScoped
 public class QuarkusFluencyFluentdResource {
 
-    @Inject FluencyClient fluencyClient;
+    @Inject
+    FluencyClient fluencyClient;
 
-    @Inject ValidatingFluencyClient validatingFluencyClient;
+    @Inject
+    ValidatingFluencyClient validatingFluencyClient;
 
     @GET
     public String hello() {
@@ -95,7 +97,9 @@ public class QuarkusFluencyFluentdResource {
                         .build();
             }
         } catch (IllegalArgumentException e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(e.getMessage())
+                    .build();
         }
     }
 
@@ -106,6 +110,8 @@ public class QuarkusFluencyFluentdResource {
         if (fluencyClient.isAvailable()) {
             return Response.ok("connected").build();
         }
-        return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity("disconnected").build();
+        return Response.status(Response.Status.SERVICE_UNAVAILABLE)
+                .entity("disconnected")
+                .build();
     }
 }

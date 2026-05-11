@@ -18,7 +18,8 @@ public class QuarkusFluencyFluentdTest {
     static final QuarkusUnitTest unitTest =
             new QuarkusUnitTest().setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class));
 
-    @Inject ValidatingFluencyClient validatingClient;
+    @Inject
+    ValidatingFluencyClient validatingClient;
 
     @Test
     public void testValidatingClientIsInjectable() {
@@ -70,16 +71,12 @@ public class QuarkusFluencyFluentdTest {
 class FluencyConfigValidationTest {
 
     @RegisterExtension
-    static final QuarkusUnitTest unitTest =
-            new QuarkusUnitTest()
-                    .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class))
-                    .overrideConfigKey("quarkus.fluency.host", " ")
-                    .assertException(
-                            t ->
-                                    Assertions.assertTrue(
-                                            hasCause(t, IllegalStateException.class),
-                                            "Expected IllegalStateException in cause chain, got: "
-                                                    + t));
+    static final QuarkusUnitTest unitTest = new QuarkusUnitTest()
+            .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class))
+            .overrideConfigKey("quarkus.fluency.host", " ")
+            .assertException(t -> Assertions.assertTrue(
+                    hasCause(t, IllegalStateException.class),
+                    "Expected IllegalStateException in cause chain, got: " + t));
 
     @Test
     public void testBlankHostFailsStartup() {
@@ -100,17 +97,12 @@ class FluencyConfigValidationTest {
 class FluencyConfigPortValidationTest {
 
     @RegisterExtension
-    static final QuarkusUnitTest zeroPortTest =
-            new QuarkusUnitTest()
-                    .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class))
-                    .overrideConfigKey("quarkus.fluency.port", "0")
-                    .assertException(
-                            t ->
-                                    Assertions.assertTrue(
-                                            FluencyConfigValidationTest.hasCause(
-                                                    t, IllegalStateException.class),
-                                            "Expected IllegalStateException for port=0, got: "
-                                                    + t));
+    static final QuarkusUnitTest zeroPortTest = new QuarkusUnitTest()
+            .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class))
+            .overrideConfigKey("quarkus.fluency.port", "0")
+            .assertException(t -> Assertions.assertTrue(
+                    FluencyConfigValidationTest.hasCause(t, IllegalStateException.class),
+                    "Expected IllegalStateException for port=0, got: " + t));
 
     @Test
     public void testZeroPortFailsStartup() {
@@ -121,17 +113,13 @@ class FluencyConfigPortValidationTest {
 class FluencyConfigBufferSizeValidationTest {
 
     @RegisterExtension
-    static final QuarkusUnitTest negativeBufferTest =
-            new QuarkusUnitTest()
-                    .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class))
-                    .overrideConfigKey("quarkus.fluency.buffer-chunk-initial-size", "-1")
-                    .assertException(
-                            t ->
-                                    Assertions.assertTrue(
-                                            FluencyConfigValidationTest.hasCause(
-                                                    t, IllegalStateException.class),
-                                            "Expected IllegalStateException for negative bufferChunkInitialSize, got: "
-                                                    + t));
+    static final QuarkusUnitTest negativeBufferTest = new QuarkusUnitTest()
+            .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class))
+            .overrideConfigKey("quarkus.fluency.buffer-chunk-initial-size", "-1")
+            .assertException(t -> Assertions.assertTrue(
+                    FluencyConfigValidationTest.hasCause(t, IllegalStateException.class),
+                    "Expected IllegalStateException for negative bufferChunkInitialSize, got: "
+                            + t));
 
     @Test
     public void testNegativeBufferSizeFailsStartup() {
@@ -142,18 +130,13 @@ class FluencyConfigBufferSizeValidationTest {
 class FluencyConfigBufferSizeCrossFieldValidationTest {
 
     @RegisterExtension
-    static final QuarkusUnitTest initialSizeGeRetentionSizeTest =
-            new QuarkusUnitTest()
-                    .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class))
-                    .overrideConfigKey("quarkus.fluency.buffer-chunk-initial-size", "8388608")
-                    .overrideConfigKey("quarkus.fluency.buffer-chunk-retention-size", "4194304")
-                    .assertException(
-                            t ->
-                                    Assertions.assertTrue(
-                                            FluencyConfigValidationTest.hasCause(
-                                                    t, IllegalStateException.class),
-                                            "Expected IllegalStateException when initialSize >= retentionSize, got: "
-                                                    + t));
+    static final QuarkusUnitTest initialSizeGeRetentionSizeTest = new QuarkusUnitTest()
+            .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class))
+            .overrideConfigKey("quarkus.fluency.buffer-chunk-initial-size", "8388608")
+            .overrideConfigKey("quarkus.fluency.buffer-chunk-retention-size", "4194304")
+            .assertException(t -> Assertions.assertTrue(
+                    FluencyConfigValidationTest.hasCause(t, IllegalStateException.class),
+                    "Expected IllegalStateException when initialSize >= retentionSize, got: " + t));
 
     @Test
     public void testInitialSizeGreaterThanRetentionSizeFailsStartup() {
@@ -165,17 +148,12 @@ class FluencyConfigBufferSizeCrossFieldValidationTest {
 class FluencyConfigSenderMaxRetryCountValidationTest {
 
     @RegisterExtension
-    static final QuarkusUnitTest negativeSenderMaxRetryCountTest =
-            new QuarkusUnitTest()
-                    .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class))
-                    .overrideConfigKey("quarkus.fluency.sender-max-retry-count", "-1")
-                    .assertException(
-                            t ->
-                                    Assertions.assertTrue(
-                                            FluencyConfigValidationTest.hasCause(
-                                                    t, IllegalStateException.class),
-                                            "Expected IllegalStateException for negative senderMaxRetryCount, got: "
-                                                    + t));
+    static final QuarkusUnitTest negativeSenderMaxRetryCountTest = new QuarkusUnitTest()
+            .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class))
+            .overrideConfigKey("quarkus.fluency.sender-max-retry-count", "-1")
+            .assertException(t -> Assertions.assertTrue(
+                    FluencyConfigValidationTest.hasCause(t, IllegalStateException.class),
+                    "Expected IllegalStateException for negative senderMaxRetryCount, got: " + t));
 
     @Test
     public void testNegativeSenderMaxRetryCountFailsStartup() {
@@ -186,17 +164,13 @@ class FluencyConfigSenderMaxRetryCountValidationTest {
 class FluencyConfigBufferChunkRetentionTimeMillisValidationTest {
 
     @RegisterExtension
-    static final QuarkusUnitTest zeroRetentionTimeTest =
-            new QuarkusUnitTest()
-                    .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class))
-                    .overrideConfigKey("quarkus.fluency.buffer-chunk-retention-time-millis", "0")
-                    .assertException(
-                            t ->
-                                    Assertions.assertTrue(
-                                            FluencyConfigValidationTest.hasCause(
-                                                    t, IllegalStateException.class),
-                                            "Expected IllegalStateException for zero bufferChunkRetentionTimeMillis, got: "
-                                                    + t));
+    static final QuarkusUnitTest zeroRetentionTimeTest = new QuarkusUnitTest()
+            .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class))
+            .overrideConfigKey("quarkus.fluency.buffer-chunk-retention-time-millis", "0")
+            .assertException(t -> Assertions.assertTrue(
+                    FluencyConfigValidationTest.hasCause(t, IllegalStateException.class),
+                    "Expected IllegalStateException for zero bufferChunkRetentionTimeMillis, got: "
+                            + t));
 
     @Test
     public void testZeroRetentionTimeMillisFailsStartup() {
