@@ -25,22 +25,27 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install scc
-        run: |
-          set -e
-          curl -fsSL "https://github.com/boyter/scc/releases/download/v${SCC_VERSION}/scc_Linux_x86_64.tar.gz" \
-            | sudo tar xz -C /usr/local/bin scc
-          scc --version
-
-      - name: Render scc report to Job Summary
+      - name: Install scc and render report
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
-          python3 .github/scripts/scc_diff.py "$BASE_SHA" "$HEAD_SHA" >> "$GITHUB_STEP_SUMMARY" \
-            || {
-              {
-                echo
-                echo "_scc report unavailable: see workflow logs._"
-              } >> "$GITHUB_STEP_SUMMARY"
-            }
+          set -uo pipefail
+          if curl -fsSL "https://github.com/boyter/scc/releases/download/v${SCC_VERSION}/scc_Linux_x86_64.tar.gz" \
+            | sudo tar xz -C /usr/local/bin scc; then
+            scc --version
+            python3 .github/scripts/scc_diff.py "$BASE_SHA" "$HEAD_SHA" >> "$GITHUB_STEP_SUMMARY" \
+              || {
+                {
+                  echo "## Code complexity impact"
+                  echo
+                  echo "_scc report unavailable: see workflow logs._"
+                } >> "$GITHUB_STEP_SUMMARY"
+              }
+          else
+            {
+              echo "## Code complexity impact"
+              echo
+              echo "_scc install unavailable: see workflow logs._"
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi

@@ -11,9 +11,10 @@ import tempfile
 from pathlib import Path
 
 SCC_BIN = "scc"
-SCC_VERSION_HINT = "v3.7.0"
 MAIN_MARKER = "/src/main/java/"
 TEST_MARKER = "/src/test/java/"
+DEFAULT_SCC_VERSION = "unknown"
+FileChange = tuple[str | None, str | None, str]
 
 
 def run(cmd: list[str], check: bool = True, cwd: str | None = None) -> str:
@@ -23,29 +24,54 @@ def run(cmd: list[str], check: bool = True, cwd: str | None = None) -> str:
     return result.stdout
 
 
-def changed_java_files(base: str, head: str) -> list[str]:
+def changed_java_files(base: str, head: str) -> list[FileChange]:
     out = run(
         [
             "git",
             "diff",
-            "--name-only",
+            "--name-status",
+            "-M",
             "--diff-filter=ACMRDT",
             f"{base}..{head}",
         ]
     )
-    return [path for path in out.splitlines() if path.endswith(".java")]
+    changes: list[FileChange] = []
+    for line in out.splitlines():
+        parts = line.split("\t")
+        status = parts[0]
+        if status.startswith("R"):
+            base_path, head_path = parts[1], parts[2]
+            if not (base_path.endswith(".java") or head_path.endswith(".java")):
+                continue
+            changes.append((base_path, head_path, head_path))
+            continue
+        if status.startswith("C"):
+            _, head_path = parts[1], parts[2]
+            if not head_path.endswith(".java"):
+                continue
+            changes.append((None, head_path, head_path))
+            continue
+
+        path = parts[1]
+        if not path.endswith(".java"):
+            continue
+        if status == "D":
+            changes.append((path, None, path))
+        else:
+            changes.append((path, path, path))
+    return changes
 
 
-def materialise(ref: str, files: list[str], out_dir: Path) -> None:
-    for path in files:
-        content = run(["git", "show", f"{ref}:{path}"], check=False)
+def materialise(ref: str, files: list[tuple[str, str]], out_dir: Path) -> None:
+    for source_path, target_path in files:
         probe = subprocess.run(
-            ["git", "cat-file", "-e", f"{ref}:{path}"],
+            ["git", "cat-file", "-e", f"{ref}:{source_path}"],
             capture_output=True,
         )
         if probe.returncode != 0:
             continue
-        target = out_dir / path
+        content = run(["git", "show", f"{ref}:{source_path}"])
+        target = out_dir / target_path
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(content)
 
@@ -92,14 +118,27 @@ def short_path(path: str) -> str:
     return path
 
 
-def make_row(path: str, base: dict | None, head: dict | None) -> tuple:
+def display_path(base_path: str | None, head_path: str | None, key_path: str) -> str:
+    short_key = short_path(key_path)
+    if base_path and head_path and base_path != head_path:
+        return f"{short_key} (renamed from {short_path(base_path)})"
+    if base_path and not head_path:
+        return f"{short_key} (deleted)"
+    return short_key
+
+
+def make_row(
+    base_path: str | None,
+    head_path: str | None,
+    key_path: str,
+    base: dict | None,
+    head: dict | None,
+) -> tuple:
     loc_base = base["Code"] if base else 0
     loc_head = head["Code"] if head else 0
     cx_base = base["Complexity"] if base else 0
     cx_head = head["Complexity"] if head else 0
-    display = short_path(path)
-    if base and not head:
-        display = f"{display} (deleted)"
+    display = display_path(base_path, head_path, key_path)
     return (
         display,
         loc_base,
@@ -148,7 +187,8 @@ def render(
     zero_delta_count: int,
 ) -> str:
     out: list[str] = []
-    out.append(f"## Code complexity impact (scc {SCC_VERSION_HINT})")
+    scc_version = os.environ.get("SCC_VERSION", DEFAULT_SCC_VERSION)
+    out.append(f"## Code complexity impact (scc v{scc_version})")
     out.append("")
     out.append(
         f"Comparing `{base_sha[:8]}` -> `{head_sha[:8]}`, Java files only."
@@ -214,8 +254,8 @@ def main() -> int:
     base_sha = run(["git", "rev-parse", sys.argv[1]]).strip()
     head_sha = run(["git", "rev-parse", sys.argv[2]]).strip()
 
-    files = changed_java_files(base_sha, head_sha)
-    if not files:
+    changes = changed_java_files(base_sha, head_sha)
+    if not changes:
         print("## Code complexity impact")
         print("")
         print("_No Java files changed in this PR._")
@@ -226,21 +266,35 @@ def main() -> int:
         head_dir = Path(temp_dir) / "head"
         base_dir.mkdir()
         head_dir.mkdir()
-        materialise(base_sha, files, base_dir)
-        materialise(head_sha, files, head_dir)
+        materialise(
+            base_sha,
+            [(base_path, key_path) for base_path, _, key_path in changes if base_path],
+            base_dir,
+        )
+        materialise(
+            head_sha,
+            [(head_path, key_path) for _, head_path, key_path in changes if head_path],
+            head_dir,
+        )
         base_scc = scc_by_file(base_dir)
         head_scc = scc_by_file(head_dir)
 
     rows: list[tuple] = []
     kept_paths: list[str] = []
     zero_delta_count = 0
-    for path in files:
-        row = make_row(path, base_scc.get(path), head_scc.get(path))
+    for base_path, head_path, key_path in changes:
+        row = make_row(
+            base_path,
+            head_path,
+            key_path,
+            base_scc.get(key_path),
+            head_scc.get(key_path),
+        )
         if row[3] == 0 and row[6] == 0:
             zero_delta_count += 1
             continue
         rows.append(row)
-        kept_paths.append(path)
+        kept_paths.append(key_path)
 
     main_rows, test_rows = split_blocks(rows, kept_paths)
     sort_key = lambda row: (-abs(row[6]), -abs(row[3]))
