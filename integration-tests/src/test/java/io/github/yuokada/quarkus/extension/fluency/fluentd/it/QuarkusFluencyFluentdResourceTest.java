@@ -68,4 +68,21 @@ public class QuarkusFluencyFluentdResourceTest {
                 .statusCode(400)
                 .body(containsString("Invalid validated-emit request"));
     }
+
+    @Test
+    public void testReadinessHealthCheckIsRegistered() {
+        // The health check must be present in the readiness endpoint.
+        // When Fluentd is connected: status=200, when not: status=503 — both indicate the check
+        // ran.
+        // The response body must mention "fluentd" regardless of UP/DOWN state.
+        io.restassured.response.ValidatableResponse response =
+                given().when().get("/q/health/ready").then();
+
+        int status = response.extract().statusCode();
+        Assertions.assertTrue(
+                status == 200 || status == 503,
+                "Expected 200 (UP) or 503 (DOWN) from /q/health/ready but got: " + status);
+
+        response.body(containsString("fluentd"));
+    }
 }
