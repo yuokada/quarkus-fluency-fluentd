@@ -13,11 +13,11 @@ public interface FluencyBuildTimeConfig {
     /**
      * Whether a health check is published in case the smallrye-health extension is present.
      *
-     * <p>When {@code true} (the default), a {@code @Readiness} check named {@code "fluentd"} is
+     * <p>When {@code true}, a {@code @Readiness} check named {@code "fluentd"} is
      * registered and reports {@code UP} when the Fluency client has successfully connected to
      * Fluentd.
      */
     @WithName("health.enabled")
-    @WithDefault("true")
+    @WithDefault("false")
     boolean healthEnabled();
 }
