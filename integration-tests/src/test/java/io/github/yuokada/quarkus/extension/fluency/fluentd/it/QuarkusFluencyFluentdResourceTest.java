@@ -6,7 +6,9 @@ import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 
 @QuarkusTest
@@ -67,5 +69,18 @@ public class QuarkusFluencyFluentdResourceTest {
                 .then()
                 .statusCode(400)
                 .body(containsString("Invalid validated-emit request"));
+    }
+
+    @Test
+    public void testReadinessHealthCheckIsRegistered() {
+        // The health check must be present in the readiness endpoint. 200 (UP) or 503 (DOWN) both
+        // indicate the check ran. Asserting on the JSON structure (checks[].name == "fluentd")
+        // rather than a raw substring avoids false positives from other components that happen to
+        // include the word "fluentd" in their output.
+        given().when()
+                .get("/q/health/ready")
+                .then()
+                .statusCode(anyOf(is(200), is(503)))
+                .body("checks.name", hasItem("fluentd"));
     }
 }
