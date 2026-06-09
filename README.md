@@ -84,6 +84,7 @@ All properties are under the `quarkus.fluency` prefix.
 | `quarkus.fluency.buffer-chunk-initial-size` | `1048576` | Buffer chunk initial size in bytes (1 MiB); must be less than retention size |
 | `quarkus.fluency.buffer-chunk-retention-size` | `4194304` | Buffer chunk retention size in bytes (4 MiB); must be greater than initial size |
 | `quarkus.fluency.buffer-chunk-retention-time-millis` | `1000` | Buffer flush interval in milliseconds |
+| `quarkus.fluency.health.enabled` | `false` | Register a `@Readiness` check for Fluentd connectivity at `/q/health/ready`; requires `quarkus-smallrye-health` on the classpath |
 
 Example `application.properties`:
 

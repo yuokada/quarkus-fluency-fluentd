@@ -13,9 +13,10 @@ public interface FluencyBuildTimeConfig {
     /**
      * Whether a health check is published in case the smallrye-health extension is present.
      *
-     * <p>When {@code true}, a {@code @Readiness} check named {@code "fluentd"} is
-     * registered and reports {@code UP} when the Fluency client has successfully connected to
-     * Fluentd.
+     * <p>Defaults to {@code false} (opt-in). Set to {@code true} to register a {@code @Readiness}
+     * check named {@code "fluentd"} at {@code /q/health/ready}. The check is only available when
+     * {@code quarkus-smallrye-health} is on the classpath; setting this to {@code true} without
+     * that dependency has no effect.
      */
     @WithName("health.enabled")
     @WithDefault("false")
