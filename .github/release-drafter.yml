@@ -67,6 +67,8 @@ autolabeler:
       - "pom.xml"
       - "**/pom.xml"
       - ".github/dependabot.yaml"
+    title:
+      - "/^deps/i"
   - label: "ci"
     files:
       - ".github/workflows/**"
