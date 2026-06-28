@@ -79,19 +79,19 @@ autolabeler:
     branch:
       - "/feature\\/.+/"
     title:
-      - "/feat/i"
-      - "/feature/i"
+      - "/^feat/i"
+      - "/^feature/i"
   - label: "bug"
     branch:
       - "/fix\\/.+/"
     title:
-      - "/fix/i"
-      - "/bug/i"
+      - "/^fix/i"
+      - "/^bug/i"
   - label: "chore"
     branch:
       - "/chore\\/.+/"
     title:
-      - "/chore/i"
+      - "/^chore/i"
 
 template: |
   ## Changes
