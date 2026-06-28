@@ -1,0 +1,99 @@
+---
+name-template: "v$RESOLVED_VERSION"
+tag-template: "v$RESOLVED_VERSION"
+tag-prefix: "v"
+change-template: "- $TITLE @$AUTHOR (#$NUMBER)"
+change-title-escapes: '\<*_&'
+
+categories:
+  - type: "pre-exclude"
+    when:
+      label: "skip-changelog"
+  - title: "Major Changes"
+    semver-increment: "major"
+    when:
+      labels:
+        - "breaking"
+        - "major"
+  - title: "Features"
+    semver-increment: "minor"
+    when:
+      labels:
+        - "feature"
+        - "enhancement"
+  - title: "Bug Fixes"
+    when:
+      labels:
+        - "bug"
+        - "fix"
+  - title: "Dependencies"
+    when:
+      label: "dependencies"
+  - title: "Documentation"
+    when:
+      label: "documentation"
+  - title: "CI"
+    when:
+      label: "ci"
+  - title: "Tests"
+    when:
+      label: "test"
+  - title: "Maintenance"
+    when:
+      label: "chore"
+  - type: "version-resolver"
+    semver-increment: "major"
+    when:
+      labels:
+        - "breaking"
+        - "major"
+  - type: "version-resolver"
+    semver-increment: "minor"
+    when:
+      labels:
+        - "feature"
+        - "enhancement"
+  - type: "version-resolver"
+    semver-increment: "patch"
+
+autolabeler:
+  - label: "documentation"
+    files:
+      - "README.md"
+      - "docs/**"
+      - ".github/instructions/**"
+  - label: "dependencies"
+    files:
+      - "pom.xml"
+      - "**/pom.xml"
+      - ".github/dependabot.yaml"
+  - label: "ci"
+    files:
+      - ".github/workflows/**"
+      - ".github/scripts/**"
+  - label: "test"
+    files:
+      - "**/src/test/**"
+      - "integration-tests/**"
+  - label: "feature"
+    branch:
+      - "/feature\\/.+/"
+    title:
+      - "/^feat/i"
+      - "/^feature/i"
+  - label: "bug"
+    branch:
+      - "/fix\\/.+/"
+    title:
+      - "/^fix/i"
+      - "/^bug/i"
+  - label: "chore"
+    branch:
+      - "/chore\\/.+/"
+    title:
+      - "/^chore/i"
+
+template: |
+  ## Changes
+
+  $CHANGES
