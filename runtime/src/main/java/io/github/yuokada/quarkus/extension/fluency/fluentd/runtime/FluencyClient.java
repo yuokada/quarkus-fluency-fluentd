@@ -25,7 +25,7 @@ import io.quarkus.runtime.Startup;
 @ApplicationScoped
 public class FluencyClient {
 
-    private static final Logger log = Logger.getLogger(FluencyClient.class);
+    private static final Logger LOG = Logger.getLogger(FluencyClient.class);
 
     @Inject
     FluencyConfig config;
@@ -35,7 +35,7 @@ public class FluencyClient {
     @PostConstruct
     void init() {
         if (!config.enabled()) {
-            log.info("Fluency client is disabled (quarkus.fluency.enabled=false)");
+            LOG.info("Fluency client is disabled (quarkus.fluency.enabled=false)");
             return;
         }
         validateConfig();
@@ -46,9 +46,9 @@ public class FluencyClient {
             builder.setBufferChunkRetentionSize(config.bufferChunkRetentionSize());
             builder.setBufferChunkRetentionTimeMillis(config.bufferChunkRetentionTimeMillis());
             fluency = builder.build(config.host(), config.port());
-            log.infof("Fluency client initialized — target: %s:%d", config.host(), config.port());
+            LOG.infof("Fluency client initialized — target: %s:%d", config.host(), config.port());
         } catch (Exception e) {
-            log.warnf("Failed to initialize Fluency client (%s). Log forwarding disabled.", e.getMessage());
+            LOG.warnf("Failed to initialize Fluency client (%s). Log forwarding disabled.", e.getMessage());
         }
     }
 
@@ -106,7 +106,7 @@ public class FluencyClient {
             fluency.emit(tag, data);
             return true;
         } catch (IOException e) {
-            log.debugf("Failed to emit record to Fluentd (tag=%s): %s", tag, e.getMessage());
+            LOG.debugf("Failed to emit record to Fluentd (tag=%s): %s", tag, e.getMessage());
             return false;
         }
     }
@@ -121,9 +121,9 @@ public class FluencyClient {
         if (fluency != null) {
             try {
                 fluency.close();
-                log.info("Fluency client closed");
+                LOG.info("Fluency client closed");
             } catch (Exception e) {
-                log.warnf("Error closing Fluency client: %s", e.getMessage());
+                LOG.warnf("Error closing Fluency client: %s", e.getMessage());
             }
         }
     }
