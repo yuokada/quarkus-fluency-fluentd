@@ -181,6 +181,7 @@
                         <version>${checkstyle-plugin.version}</version>
                         <configuration>
                             <failOnViolation>true</failOnViolation>
+                            <violationSeverity>warning</violationSeverity>
                             <failsOnError>false</failsOnError>
                             <consoleOutput>true</consoleOutput>
                         </configuration>
