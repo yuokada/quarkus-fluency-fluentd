@@ -131,7 +131,7 @@ Run the checks from the repository root (Java 17+ and Maven 3.9+):
 ./mvnw -Pcheckstyle-trial validate
 ```
 
-The trial profile **reports violations without failing the build solely because of violations**. Review the Maven console output for individual findings. Each module also writes separate machine-readable reports:
+The Checkstyle profile **fails the build if the number of violations exceeds the configured limit in any Checkstyle execution**. The default is 0 violations per execution (per module and per main/test rule set). This is not a repository-wide total. You can override the limit with `-Dcheckstyle.maxAllowedViolations=5`, which permits up to 5 findings in **each** execution. Review the Maven console output for individual findings. Each module also writes separate machine-readable reports:
 
 - `runtime/target/checkstyle-main.xml` and `runtime/target/checkstyle-test.xml`
 - `deployment/target/checkstyle-main.xml` and `deployment/target/checkstyle-test.xml`
@@ -148,7 +148,7 @@ The summary separates **Main sources** and **Test sources**, shows counts by rul
 
 If you want to check only one module, use Maven's `-pl` option (for example, `./mvnw -pl deployment -Pcheckstyle-trial validate`). If no XML report is found, inspect the Maven output for configuration or execution errors; an absent report does not prove that there are no violations.
 
-The GitHub Actions workflow `.github/workflows/checkstyle.yml` uses the same profile. Enforcing failures for newly introduced violations is tracked in [issue #77](https://github.com/yuokada/quarkus-fluency-fluentd/issues/77).
+The GitHub Actions workflow `.github/workflows/checkstyle.yml` uses the same Maven threshold (default 0). To run locally with a different per-execution threshold, use `./mvnw -Pcheckstyle-trial -Dcheckstyle.maxAllowedViolations=5 validate`. The XML report and summary script are informational; Maven decides the CI result. This approach is proposed as an alternative to repository-wide aggregation in [PR #79](https://github.com/yuokada/quarkus-fluency-fluentd/pull/79), for [issue #77](https://github.com/yuokada/quarkus-fluency-fluentd/issues/77).
 
 
 ## Project Structure
