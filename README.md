@@ -121,6 +121,36 @@ This project uses [spotless-maven-plugin](https://github.com/diffplug/spotless/b
 
 The `spotless:check` goal is bound to the `verify` phase, so CI will fail on unformatted code. Run `spotless:apply` before committing.
 
+### Checkstyle (local violation report)
+
+Checkstyle checks naming, nesting depth, cyclomatic complexity, star imports, parameter counts, and method length. The production and test source sets use separate rule files: `checkstyle/main.xml` and `checkstyle/test.xml`.
+
+Run the checks from the repository root (Java 17+ and Maven 3.9+):
+
+```bash
+./mvnw -Pcheckstyle-trial validate
+```
+
+The trial profile **reports violations without failing the build solely because of violations**. Review the Maven console output for individual findings. Each module also writes separate machine-readable reports:
+
+- `runtime/target/checkstyle-main.xml` and `runtime/target/checkstyle-test.xml`
+- `deployment/target/checkstyle-main.xml` and `deployment/target/checkstyle-test.xml`
+- `integration-tests/target/checkstyle-main.xml` and `integration-tests/target/checkstyle-test.xml`
+
+The XML files that are produced depend on which modules have applicable source directories. To render the same Markdown summary used by GitHub Actions, run:
+
+```bash
+python3 .github/scripts/checkstyle_report.py > checkstyle-summary.md
+cat checkstyle-summary.md
+```
+
+The summary separates **Main sources** and **Test sources**, shows counts by rule, and lists up to 50 findings for each source set. These are **threshold violations**, not numeric complexity scores for every method.
+
+If you want to check only one module, use Maven's `-pl` option (for example, `./mvnw -pl deployment -Pcheckstyle-trial validate`). If no XML report is found, inspect the Maven output for configuration or execution errors; an absent report does not prove that there are no violations.
+
+The GitHub Actions workflow `.github/workflows/checkstyle.yml` uses the same profile. Enforcing failures for newly introduced violations is tracked in [issue #77](https://github.com/yuokada/quarkus-fluency-fluentd/issues/77).
+
+
 ## Project Structure
 
 ```
