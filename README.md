@@ -131,7 +131,7 @@ Run the checks from the repository root (Java 17+ and Maven 3.9+):
 ./mvnw -Pcheckstyle-trial validate
 ```
 
-The Checkstyle profile **fails the build when any violation is found** (zero-violation baseline). Review the Maven console output for individual findings. Each module also writes separate machine-readable reports:
+The Checkstyle Maven profile **reports violations without failing solely on their count**. GitHub Actions enforces a **repository-wide** violation threshold after Maven succeeds. The default threshold is **0**, so any violation fails CI. The count is summed across all modules and both main/test source sets; a count equal to the threshold passes. Review the Maven console output for individual findings. Each module also writes separate machine-readable reports:
 
 - `runtime/target/checkstyle-main.xml` and `runtime/target/checkstyle-test.xml`
 - `deployment/target/checkstyle-main.xml` and `deployment/target/checkstyle-test.xml`
@@ -142,13 +142,16 @@ The XML files that are produced depend on which modules have applicable source d
 ```bash
 python3 .github/scripts/checkstyle_report.py > checkstyle-summary.md
 cat checkstyle-summary.md
+
+# Enforce the same repository-wide threshold as CI (default: 0)
+python3 .github/scripts/checkstyle_report.py --max-violations 0
 ```
 
 The summary separates **Main sources** and **Test sources**, shows counts by rule, and lists up to 50 findings for each source set. These are **threshold violations**, not numeric complexity scores for every method.
 
 If you want to check only one module, use Maven's `-pl` option (for example, `./mvnw -pl deployment -Pcheckstyle-trial validate`). If no XML report is found, inspect the Maven output for configuration or execution errors; an absent report does not prove that there are no violations.
 
-The GitHub Actions workflow `.github/workflows/checkstyle.yml` uses the same profile. CI enforces a zero-violation baseline for both production and test code (see [issue #77](https://github.com/yuokada/quarkus-fluency-fluentd/issues/77)). If the build fails, inspect the Maven output and the generated XML reports; fix the violations and rerun the command. No baseline file needs updating.
+The GitHub Actions workflow `.github/workflows/checkstyle.yml` runs Maven first, then invokes the reporting script with `--max-violations`. To allow more violations across the **entire repository**, change `CHECKSTYLE_MAX_VIOLATIONS` in that workflow (for example, `5` permits up to five total findings). Missing or malformed reports fail the threshold check rather than being counted as zero. The local command with `--max-violations` exits nonzero when the threshold is exceeded. See [issue #77](https://github.com/yuokada/quarkus-fluency-fluentd/issues/77).
 
 
 ## Project Structure
