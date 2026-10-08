@@ -135,9 +135,9 @@ The Checkstyle profile **fails the build if the number of violations exceeds the
 
 - `runtime/target/checkstyle-main.xml` and `runtime/target/checkstyle-test.xml`
 - `deployment/target/checkstyle-main.xml` and `deployment/target/checkstyle-test.xml`
-- `integration-tests/target/checkstyle-main.xml` and `integration-tests/target/checkstyle-test.xml`
+- The `integration-tests` module is excluded from Checkstyle via `checkstyle.skip=true` in its `checkstyle-trial` profile. It remains part of the Maven reactor and its other build/test goals still run.
 
-The XML files that are produced depend on which modules have applicable source directories. To render the same Markdown summary used by GitHub Actions, run:
+The XML files that are produced depend on which included modules have applicable source directories. The `integration-tests` module intentionally produces no Checkstyle reports when the trial profile is active. To render the same Markdown summary used by GitHub Actions, run:
 
 ```bash
 python3 .github/scripts/checkstyle_report.py > checkstyle-summary.md
