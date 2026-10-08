@@ -28,7 +28,7 @@ jobs:
           distribution: temurin
           java-version: '17'
           cache: maven
-      - name: Run Checkstyle (non-blocking violations)
+      - name: Run Checkstyle (fail on violations)
         run: mvn -B -ntp -Pcheckstyle-trial validate
       - name: Render Checkstyle summary
         if: always()
