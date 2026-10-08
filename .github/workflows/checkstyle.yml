@@ -1,4 +1,4 @@
-name: Checkstyle complexity report
+name: Checkstyle violation gate
 
 on:
   pull_request:
@@ -28,10 +28,15 @@ jobs:
           distribution: temurin
           java-version: '17'
           cache: maven
-      - name: Run Checkstyle (fail on violations)
+      - name: Run Checkstyle (collect violations)
         run: mvn -B -ntp -Pcheckstyle-trial validate
-      - name: Render Checkstyle summary
-        if: always()
+      - name: Evaluate repository-wide Checkstyle threshold
+        if: success()
+        env:
+          CHECKSTYLE_MAX_VIOLATIONS: '0'
+        run: python3 .github/scripts/checkstyle_report.py --max-violations "$CHECKSTYLE_MAX_VIOLATIONS" | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Render Checkstyle summary if Maven failed
+        if: failure()
         run: python3 .github/scripts/checkstyle_report.py >> "$GITHUB_STEP_SUMMARY"
       - name: Upload Checkstyle XML reports
         if: always()
