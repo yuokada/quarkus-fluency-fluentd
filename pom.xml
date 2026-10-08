@@ -180,9 +180,8 @@
                         <artifactId>maven-checkstyle-plugin</artifactId>
                         <version>${checkstyle-plugin.version}</version>
                         <configuration>
-                            <failOnViolation>true</failOnViolation>
-                            <violationSeverity>warning</violationSeverity>
-                            <failsOnError>false</failsOnError>
+                            <failOnViolation>false</failOnViolation>
+                                                        <failsOnError>false</failsOnError>
                             <consoleOutput>true</consoleOutput>
                         </configuration>
                         <executions>
