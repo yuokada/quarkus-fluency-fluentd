@@ -82,6 +82,13 @@
 
     <profiles>
         <profile>
+            <id>checkstyle-trial</id>
+            <properties>
+                <!-- Integration tests are excluded from Checkstyle, not from the Maven reactor. -->
+                <checkstyle.skip>true</checkstyle.skip>
+            </properties>
+        </profile>
+        <profile>
             <id>native-image</id>
             <activation>
                 <property>

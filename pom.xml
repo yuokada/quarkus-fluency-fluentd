@@ -173,6 +173,9 @@
     <profiles>
         <profile>
             <id>checkstyle-trial</id>
+            <properties>
+                <checkstyle.maxAllowedViolations>0</checkstyle.maxAllowedViolations>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
@@ -180,7 +183,9 @@
                         <artifactId>maven-checkstyle-plugin</artifactId>
                         <version>${checkstyle-plugin.version}</version>
                         <configuration>
-                            <failOnViolation>false</failOnViolation>
+                            <failOnViolation>true</failOnViolation>
+                            <violationSeverity>warning</violationSeverity>
+                            <maxAllowedViolations>${checkstyle.maxAllowedViolations}</maxAllowedViolations>
                             <failsOnError>false</failsOnError>
                             <consoleOutput>true</consoleOutput>
                         </configuration>
