@@ -216,3 +216,7 @@ If you run `-Prelease` locally, you must provide the same GPG key and Maven Cent
 ## License
 
 MIT License
+
+### PMD (Cognitive Complexity trial)
+
+Run `./mvnw -Ppmd-trial -DskipTests verify` to generate PMD XML reports without failing the build for rule violations. The initial ruleset (`pmd/ruleset.xml`) checks Java Cognitive Complexity at a threshold of 15. It covers main sources in `runtime` and `deployment`; `integration-tests` is excluded via `pmd.skip`. Checkstyle and Spotless remain independent. CI uploads generated `target/pmd.xml` reports as artifacts. This is a trial; review false positives and execution time before enforcing violations.
