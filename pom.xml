@@ -86,6 +86,8 @@
                             <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
                             <maven.home>${maven.home}</maven.home>
                             <maven.repo>${settings.localRepository}</maven.repo>
+                            <!-- Avoid parallel bootstrap class-loading deadlocks (quarkusio/quarkus#55317). -->
+                            <quarkus.bootstrap.blocking-task-runner>true</quarkus.bootstrap.blocking-task-runner>
                         </systemPropertyVariables>
                     </configuration>
                 </plugin>
@@ -97,6 +99,8 @@
                             <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
                             <maven.home>${maven.home}</maven.home>
                             <maven.repo>${settings.localRepository}</maven.repo>
+                            <!-- Avoid parallel bootstrap class-loading deadlocks (quarkusio/quarkus#55317). -->
+                            <quarkus.bootstrap.blocking-task-runner>true</quarkus.bootstrap.blocking-task-runner>
                         </systemPropertyVariables>
                     </configuration>
                 </plugin>

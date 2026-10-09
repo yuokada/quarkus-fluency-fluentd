@@ -34,7 +34,19 @@ jobs:
         run: ./mvnw -B install -pl .,deployment,runtime
 
       - name: Integration test (JVM mode)
-        run: ./mvnw -B verify -f integration-tests/pom.xml -DskipITs=false
+        run: |
+          ./mvnw -B verify -f integration-tests/pom.xml -DskipITs=false &
+          maven_pid=$!
+          # Capture discovery/bootstrap hangs before the job timeout removes the JVM.
+          (
+            sleep 120
+            jcmd -l | awk '/surefirebooter/ {print $1}' | while read -r pid; do
+              jcmd "$pid" Thread.print -l || true
+            done
+          ) &
+          diagnostics_pid=$!
+          trap 'kill "$diagnostics_pid" 2>/dev/null || true' EXIT
+          wait "$maven_pid"
 
   native:
     name: Native image test
