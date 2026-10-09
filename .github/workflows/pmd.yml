@@ -1,0 +1,33 @@
+name: PMD trial report
+
+on:
+  pull_request:
+    paths:
+      - '**/*.java'
+      - '**/pom.xml'
+      - 'pmd/**'
+      - '.github/workflows/pmd.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pmd:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+      - name: Generate PMD reports (non-blocking)
+        run: ./mvnw -B -ntp -Ppmd-trial -DskipTests verify
+      - name: Upload PMD reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pmd-reports
+          path: '**/target/pmd.xml'
+          if-no-files-found: warn
