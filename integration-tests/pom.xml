@@ -82,6 +82,12 @@
 
     <profiles>
         <profile>
+            <id>pmd-trial</id>
+            <properties>
+                <pmd.skip>true</pmd.skip>
+            </properties>
+        </profile>
+        <profile>
             <id>checkstyle-trial</id>
             <properties>
                 <!-- Integration tests are excluded from Checkstyle, not from the Maven reactor. -->
