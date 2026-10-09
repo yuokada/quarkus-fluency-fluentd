@@ -13,6 +13,7 @@ concurrency:
 jobs:
   build:
     name: Build & Test (Java ${{ matrix.java }})
+    timeout-minutes: 20
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -38,6 +39,7 @@ jobs:
   native:
     name: Native image test
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     if: github.event_name == 'push'
     steps:
       - uses: actions/checkout@v7
