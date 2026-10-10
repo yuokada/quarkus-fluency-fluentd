@@ -33,6 +33,7 @@ public class FluencyClient {
     private Fluency fluency;
 
     @PostConstruct
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     void init() {
         if (!config.enabled()) {
             LOG.info("Fluency client is disabled (quarkus.fluency.enabled=false)");
@@ -117,6 +118,7 @@ public class FluencyClient {
     }
 
     @PreDestroy
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     void destroy() {
         if (fluency != null) {
             try {
