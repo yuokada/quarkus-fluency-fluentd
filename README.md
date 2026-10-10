@@ -216,3 +216,9 @@ If you run `-Prelease` locally, you must provide the same GPG key and Maven Cent
 ## License
 
 MIT License
+
+### PMD (trial rules)
+
+The Maven PMD Plugin is pinned to 3.28.0 and the PMD analysis engine is overridden to 7.28.0 via `pmd-core` and `pmd-java` plugin dependencies.
+
+Run `./mvnw -Ppmd-trial -DskipTests verify` to generate PMD XML reports without failing the build for rule violations. The trial ruleset (`pmd/ruleset.xml`) checks Java Cognitive Complexity at a threshold of 15, plus `AvoidThrowingRawExceptionTypes`, `CloseResource`, `PreserveStackTrace`, and `AvoidCatchingGenericException`. It covers main sources in `runtime` and `deployment`; `integration-tests` is excluded via `pmd.skip`. Checkstyle and Spotless remain independent. CI uploads generated `target/pmd.xml` reports as artifacts and renders a Markdown findings summary in the GitHub Actions Job Summary. This is a trial; review false positives and execution time before enforcing violations.
